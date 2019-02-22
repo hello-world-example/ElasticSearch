@@ -1,3 +1,6 @@
 * [安装](install.md)
-* [入门](a-glance.md)
+* [核心概念](core.md)
+* [RESTful 接口](RESTful.md)
+* Kibana
+  * 
 
