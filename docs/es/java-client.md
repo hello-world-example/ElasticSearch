@@ -49,7 +49,7 @@
 </dependency>
 ```
 
-> 代码示例详见：
+> 代码示例详见：https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-client
 
 ## Rest High Level Client
 
@@ -61,9 +61,7 @@
 </dependency>
 ```
 
-
-
-
+> 代码示例详见：https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-high-client
 
 ## Transport Client
 
@@ -75,7 +73,7 @@
 </dependency>
 ```
 
-
+> 代码示例详见：https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-client
 
 ## Read More
 
