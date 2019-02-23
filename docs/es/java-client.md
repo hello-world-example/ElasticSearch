@@ -6,24 +6,24 @@
 
   - org.apache.httpcomponents:httpasyncclient
   - org.apache.httpcomponents:httpcore-nio
-  - org.apache.httpcomponents:httpclient
+  - org.apache.httpcomponents:**httpclient**
   - org.apache.httpcomponents:httpcore
   - commons-codec:commons-codec
   - commons-logging:commons-logging
 
-- `elasticsearch-rest-high-level-client` 使用 9200 HTTP 协议进行通讯，对直接发送原始数据的低阶API进行分装，相对低阶API 更加友好，但是想要的功能并不一定封装全，任何未实现的功能可通过 低阶API进行操作
+- `elasticsearch-rest-high-level-client` 使用 9200 HTTP 协议进行通讯，对常用操作进行语义化封装，相对低阶API 更加友好，但是想要的功能并不一定封装全，任何未实现的功能可通过 低阶API进行操作
 
-  - org.elasticsearch.client:elasticsearch-rest-client
-  - org.elasticsearch:elasticsearch
+  - org.elasticsearch.client:**elasticsearch-rest-client**
+  - org.elasticsearch:**elasticsearch**
   - org.elasticsearch.plugin:parent-join-client
   - org.elasticsearch.plugin:aggs-matrix-stats-client
 
 - `transport` 使用 9300 TCP 协议端口进行通讯，性能好
 
   - transport-netty3-client
-  - transport-netty4-client
+  - **transport-netty4-client**
   - reindex-client
-    - elasticsearch-rest-client
+    - **elasticsearch-rest-client**
 
   
 
@@ -68,7 +68,21 @@
 </dependency>
 ```
 
-> 代码示例详见：https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-high-client
+初始化
+
+```java
+// 通过 低阶客户端 RestClient 作为参数进行初始化
+RestHighLevelClient client = new RestHighLevelClient(lowLevelRestClient); 
+```
+
+
+
+> - 代码示例详见
+>   - https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-high-client
+>
+> - 官方 Java Doc
+>   - https://artifacts.elastic.co/javadoc/org/elasticsearch/client/elasticsearch-rest-high-level-client/5.6.15/index.html
+> - 
 
 ## Transport Client
 
