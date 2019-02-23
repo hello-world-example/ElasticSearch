@@ -6,6 +6,7 @@
 - 中文社区
   - [Github](https://github.com/elasticsearch-cn)
   - [网站](https://elasticsearch.cn/)
+  - [elasticsearch-definitive-guide](https://github.com/elasticsearch-cn/elasticsearch-definitive-guide)
 - Kibana
   - [Kibana 用户手册](https://www.elastic.co/guide/cn/kibana/current/index.html)
 
