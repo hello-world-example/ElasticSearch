@@ -8,3 +8,7 @@
   - [网站](https://elasticsearch.cn/)
 - Kibana
   - [Kibana 用户手册](https://www.elastic.co/guide/cn/kibana/current/index.html)
+
+
+
+> docsify serve ./docs
