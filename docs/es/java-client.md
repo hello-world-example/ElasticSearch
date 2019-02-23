@@ -4,17 +4,19 @@
 
 - `elasticsearch-rest-client` 使用 9200 HTTP 协议进行通讯，上手简单，是低阶 API
 
-  - httpcore
-  - httpclient
-  - httpasyncclient
-  - httpcore-nio
+  - org.apache.httpcomponents:httpasyncclient
+  - org.apache.httpcomponents:httpcore-nio
+  - org.apache.httpcomponents:httpclient
+  - org.apache.httpcomponents:httpcore
+  - commons-codec:commons-codec
+  - commons-logging:commons-logging
 
 - `elasticsearch-rest-high-level-client` 使用 9200 HTTP 协议进行通讯，对直接发送原始数据的低阶API进行分装，相对低阶API 更加友好，但是想要的功能并不一定封装全，任何未实现的功能可通过 低阶API进行操作
 
-  - elasticsearch-rest-client
-  - parent-join-client
-  - aggs-matrix-stats-client
-  - elasticsearch
+  - org.elasticsearch.client:elasticsearch-rest-client
+  - org.elasticsearch:elasticsearch
+  - org.elasticsearch.plugin:parent-join-client
+  - org.elasticsearch.plugin:aggs-matrix-stats-client
 
 - `transport` 使用 9300 TCP 协议端口进行通讯，性能好
 
@@ -49,7 +51,12 @@
 </dependency>
 ```
 
-> 代码示例详见：https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-client
+> - 代码示例详见：
+>   - https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-client
+> - 官方入门文档：
+>   - https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-low-usage-initialization.html
+> - 官方 Java Doc
+>   - https://artifacts.elastic.co/javadoc/org/elasticsearch/client/elasticsearch-rest-client/6.6.1/org/elasticsearch/client/package-summary.html
 
 ## Rest High Level Client
 
