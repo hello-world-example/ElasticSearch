@@ -44,9 +44,12 @@
 - 索引切分成较小的**分片（shard）**放在不同的服务器上，其中每个分片都是一个独立的Apache Lucene索引，多个分片可以加快索引和查询速度。当查询的索引分布在多个分片上时， ES 会把查询发送给每个相关的分片，并将结果合并在一起，而应用程序并不知道分片的存在。
 - **副本（replica）**只是一个分片的精确复制，每个分片可以有零个或多个副本
 - **副本分片（replica shard）** 可从 **主分片（primary shard）** 复制数据，在主分片丢失时，集群会将副本提升为新的主分片
-- 
 
 
+
+## Read More 
+
+- [Basic Concepts](https://www.elastic.co/guide/en/elasticsearch/reference/6.6/getting-started-concepts.html) 官方文档
 
 
 
