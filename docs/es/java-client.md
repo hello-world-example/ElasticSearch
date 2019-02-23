@@ -94,7 +94,14 @@ RestHighLevelClient client = new RestHighLevelClient(lowLevelRestClient);
 </dependency>
 ```
 
-> 代码示例详见：https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-client
+> - 代码示例详见
+>   - https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-client
+
+## Spring Data Elasticsearch
+
+> https://spring.io/projects/spring-data-elasticsearch
+>
+> 官方文档：https://docs.spring.io/spring-data/elasticsearch/docs/3.1.5.RELEASE/reference/html/
 
 ## Read More
 
