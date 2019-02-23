@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+/**
+ * spring-data-elasticsearch API操作示例 http://cxytiandi.com/blog/detail/5862
+ */
 @Component
 public class ElasticCommandLineRunner implements CommandLineRunner {
 
@@ -14,6 +17,5 @@ public class ElasticCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-
     }
 }
