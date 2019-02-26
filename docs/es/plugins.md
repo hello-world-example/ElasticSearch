@@ -2,8 +2,6 @@
 
 ElasticSearch 插件是一个 jar 文件，也可能包含脚本和配置文件，并且**必须安装在群集中的每个节点上，安装后，必须重新启动每个节点才能看到插件**。
 
-
-
 ## elasticsearch-plugin
 
 ```bash
@@ -47,21 +45,19 @@ exec "$JAVA" $ES_JAVA_OPTS -Delasticsearch "${path_props[@]}" -cp "$ES_HOME/lib/
 
 ### 官方插件
 
-TODO
+如果是 [官方插件](https://github.com/elastic/elasticsearch/tree/master/plugins)，直接 `./bin/elasticsearch-plugin install [plugin_name]` 即可自动下载安装
 
 ### 第三方插件
 
-TODO
+- 从远端 url 下载安装：`elasticsearch-plugin install http://some.domain/path/to/plugin.zip`
+- 本地安装：`elasticsearch-plugin install file:///C:/path/to/plugin.zip`
+- 解压安装：压缩包解压到 `${ES_HOME}/plugins/` 目录即可
 
-## 常用插件
+## 自定义插件开发
 
-| 插件                      | 简介                                        | 地址                                                         |
-| ------------------------- | ------------------------------------------- | ------------------------------------------------------------ |
-| Elastic-HQ                | Management and Monitoring for Elasticsearch | 官方：http://www.elastichq.org/<br />Github：[ElasticHQ/elasticsearch-HQ](https://github.com/ElasticHQ/elasticsearch-HQ) |
-| elasticsearch-analysis-ik | IK 中文分词器                               | Github：[medcl/elasticsearch-analysis-ik](https://github.com/medcl/elasticsearch-analysis-ik) |
-|                           |                                             |                                                              |
-|                           |                                             |                                                              |
-|                           |                                             |                                                              |
+> - 官方文档 [Help for plugin authors](https://www.elastic.co/guide/en/elasticsearch/plugins/current/plugin-authors.html)
+> - [官方示例](https://github.com/elastic/elasticsearch/tree/master/plugins/examples)
+> - [Elasticsearch5.5.1插件开发指南](https://blog.csdn.net/cheng123bin/article/details/77573902)
 
 
 
@@ -70,4 +66,3 @@ TODO
 - 官方文档 [Elasticsearch Plugins and Integrations](https://www.elastic.co/guide/en/elasticsearch/plugins/current/index.html)
 - 跟随官方版本一起发布的 [核心插件](https://github.com/elastic/elasticsearch/tree/master/plugins)
 - 官方 [Analysis Plugins](https://www.elastic.co/guide/en/elasticsearch/plugins/current/analysis.html)
-- [ElasticSearch学习总结（八）：插件的开发](https://blog.csdn.net/eric_sunah/article/details/79458440)

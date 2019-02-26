@@ -81,6 +81,20 @@ $ docker run -d -p 5601:5601 -e "ELASTICSEARCH_URL=http://192.168.1.5:9200" kiba
 - `Time Filter field name` 一栏选择 `I don't want to use the Time Filter`
 - `Create` 保存
 
+### 异常处理
+
+#### plugin:elasticsearch 有问题
+
+```bash
+# 删除索引
+$ curl -X DELETE http://localhost:9200/.kibana
+
+# 重建索引
+$ curl -X PUT http://localhost:9200/.kibana
+```
+
+
+
 ### Dev Tool
 
 开始先不必了解 Kibana 的 报表和监控 等功能。
