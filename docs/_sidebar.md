@@ -6,7 +6,7 @@
   * [Java Client](es/java-client.md)
   * [插件机制](es/plugins.md)
   * [IK 中文分词 插件](es/ik-plugin.md)
-  * [Analyzer 分析器](analyzer.md)
+  * [导入导出](es/dump.md)
   * API
     * Search
       * 分组
@@ -15,7 +15,6 @@
       * 集群部署
       * 分片
       * 选举
-    * Cat
     * Analysis
     * Mapping
 * Kibana
