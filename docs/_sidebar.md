@@ -7,16 +7,9 @@
   * [插件机制](es/plugins.md)
   * [IK 中文分词 插件](es/ik-plugin.md)
   * [导入导出](es/dump.md)
-  * API
-    * Search
-      * 分组
-    * Query DSL
-    * 集群
-      * 集群部署
-      * 分片
-      * 选举
-    * Analysis
-    * Mapping
+  * [Profile API](es/profile.md)
+  * Metrics
+    * [elasticsearch-metrics](es/Metrics/elasticsearch-metrics.md)
 * Kibana
   * 
 
