@@ -1,6 +1,6 @@
 # 版本历史
 
-> 详见官方文档：https://www.elastic.co/downloads/past-releases
+> 详见官方文档：https://www.elastic.co/cn/downloads/past-releases#elasticsearch
 
 ## 版本时间概述
 
