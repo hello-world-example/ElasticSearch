@@ -1,2 +1,4 @@
-*.iml
 target
+*.iml
+.idea
+HuGo/themes/book
