@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Profile"><meta property="og:title" content="" />
+<meta property="og:description" content="Profile API { ..., &#34;profile&#34; : true, ... } shards.id # ID 格式 [nodeID][indexName][shardID]  GET /_nodes/stats 查看节点信息
+ shards.searches shards.searches.query  type 它向我们显示了哪种类型的查询被触发 description 该字段显示启动查询的lucene方法 time lucene 执行此查询所用的时间 breakdown 有关查询的更详细的细节，主要与 lucene 参数有关。 children – 具有多个关键字的查询被拆分成相应术语的布尔查询，每个查询都作为单独的查询来执行。每个子查询的详细信息将填充到Profile API输出的子段中。在上面的章节中，可以看到第一个子元素查询是&quot;levi&rdquo;，下面给出查询时间和其他breakdown参数等详细信息。同样，对于第二个关键字，有一个名为&quot;goals&quot;的子元素具有与其兄弟相同的信息。从查询中的子段中，我们可以得到关于哪个搜索项在总体搜索中造成最大延迟的信息。  shards.searches.rewrite_time 将查询重写成一个或多个组合查询的时间被称为“重写时间”，以纳秒为单位
+shards.searches.collector 在 Lucene 中，收集器是负责 收集原始结果，收集组合结果，执行结果排序等的过程。例如，在上面的执行的查询中，当查询语句中给出size:0时，使用的收集器是&quot;totalHitCountCollector&rdquo;。这只返回搜索结果的数量（search_count），不返回文档。此外，收集者所用的时间也一起给出了。
+shards.aggregations " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/profile/" />
+
+<title>Profile | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li><strong>入门</strong>
+<ul>
+<li><a href="/ElasticSearch/docs/ElasticSearch/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/profile/"class=active>Profile API</a></li>
+</ul>
+</li>
+<li><strong>监控</strong>
+<ul>
+<li><a href="/ElasticSearch/docs/ElasticSearch/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Profile</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#shardsid">shards.id</a></li>
+    <li><a href="#shardssearches">shards.searches</a>
+      <ul>
+        <li><a href="#shardssearchesquery">shards.searches.query</a></li>
+        <li><a href="#shardssearchesrewrite_time">shards.searches.rewrite_time</a></li>
+        <li><a href="#shardssearchescollector">shards.searches.collector</a></li>
+      </ul>
+    </li>
+    <li><a href="#shardsaggregations">shards.aggregations</a></li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="profile-api">Profile API</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#960050;background-color:#1e0010">...,</span>
+  <span style="color:#f92672">&#34;profile&#34;</span> : <span style="color:#66d9ef">true</span>,
+  <span style="color:#960050;background-color:#1e0010">...</span>
+}
+</code></pre></div><h2 id="shardsid">shards.id</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># ID 格式</span>
+<span style="color:#f92672">[</span>nodeID<span style="color:#f92672">][</span>indexName<span style="color:#f92672">][</span>shardID<span style="color:#f92672">]</span>
+</code></pre></div><blockquote>
+<p>GET /_nodes/stats 查看节点信息</p>
+</blockquote>
+<h2 id="shardssearches">shards.searches</h2>
+<h3 id="shardssearchesquery">shards.searches.query</h3>
+<ul>
+<li><code>type</code> 它向我们显示了哪种类型的查询被触发</li>
+<li><code>description</code>  该字段显示启动查询的lucene方法</li>
+<li><code>time</code> lucene 执行此查询所用的时间</li>
+<li><code>breakdown</code> 有关查询的更详细的细节，主要与 lucene 参数有关。</li>
+<li>children – 具有多个关键字的查询被拆分成相应术语的布尔查询，每个查询都作为单独的查询来执行。每个子查询的详细信息将填充到Profile API输出的子段中。在上面的章节中，可以看到第一个子元素查询是&quot;levi&rdquo;，下面给出查询时间和其他breakdown参数等详细信息。同样，对于第二个关键字，有一个名为&quot;goals&quot;的子元素具有与其兄弟相同的信息。从查询中的子段中，我们可以得到关于哪个搜索项在总体搜索中造成最大延迟的信息。</li>
+</ul>
+<h3 id="shardssearchesrewrite_time">shards.searches.rewrite_time</h3>
+<p>将查询重写成一个或多个组合查询的时间被称为“重写时间”，以纳秒为单位</p>
+<h3 id="shardssearchescollector">shards.searches.collector</h3>
+<p>在 Lucene 中，收集器是负责 收集原始结果，收集组合结果，执行结果排序等的过程。例如，在上面的执行的查询中，当查询语句中给出size:0时，使用的收集器是&quot;totalHitCountCollector&rdquo;。这只返回搜索结果的数量（search_count），不返回文档。此外，收集者所用的时间也一起给出了。</p>
+<h2 id="shardsaggregations">shards.aggregations</h2>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/ElasticSearch/profile.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#shardsid">shards.id</a></li>
+    <li><a href="#shardssearches">shards.searches</a>
+      <ul>
+        <li><a href="#shardssearchesquery">shards.searches.query</a></li>
+        <li><a href="#shardssearchesrewrite_time">shards.searches.rewrite_time</a></li>
+        <li><a href="#shardssearchescollector">shards.searches.collector</a></li>
+      </ul>
+    </li>
+    <li><a href="#shardsaggregations">shards.aggregations</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

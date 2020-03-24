@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Java Client"><meta property="og:title" content="" />
+<meta property="og:description" content="Java Client 简介   elasticsearch-rest-client 使用 9200 HTTP 协议进行通讯，上手简单，是低阶 API
+ org.apache.httpcomponents:httpasyncclient org.apache.httpcomponents:httpcore-nio org.apache.httpcomponents:httpclient org.apache.httpcomponents:httpcore commons-codec:commons-codec commons-logging:commons-logging    elasticsearch-rest-high-level-client 使用 9200 HTTP 协议进行通讯，对常用操作进行语义化封装，相对低阶API 更加友好，但是想要的功能并不一定封装全，任何未实现的功能可通过 低阶API进行操作
+ org.elasticsearch.client:elasticsearch-rest-client org.elasticsearch:elasticsearch org.elasticsearch.plugin:parent-join-client org.elasticsearch.plugin:aggs-matrix-stats-client    transport 使用 9300 TCP 协议端口进行通讯，性能好
+ transport-netty3-client transport-netty4-client reindex-client  elasticsearch-rest-client       官方建议使用 REST 方式， transport 在 7.0 开始废弃，8.0版本移除
+详见官方文档：https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/client.html
+  【【注意】】
+客户机应该具有与集群相同的版本，起码主版本必须一致
+主版本如果不一致，可能会出现调用错误
+次版本如果不一致，可能新功能无法使用
+ Rest Client &lt;dependency&gt; &lt;groupId&gt;org." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/java-client/" />
+
+<title>Java Client | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li><strong>入门</strong>
+<ul>
+<li><a href="/ElasticSearch/docs/ElasticSearch/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/java-client/"class=active>Java Client</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/profile/">Profile API</a></li>
+</ul>
+</li>
+<li><strong>监控</strong>
+<ul>
+<li><a href="/ElasticSearch/docs/ElasticSearch/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Java Client</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#简介">简介</a></li>
+    <li><a href="#rest-client">Rest Client</a></li>
+    <li><a href="#rest-high-level-client">Rest High Level Client</a></li>
+    <li><a href="#transport-client">Transport Client</a></li>
+    <li><a href="#spring-data-elasticsearch">Spring Data Elasticsearch</a></li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="java-client">Java Client</h1>
+<h2 id="简介">简介</h2>
+<ul>
+<li>
+<p><code>elasticsearch-rest-client</code> 使用 9200 HTTP 协议进行通讯，上手简单，是低阶 API</p>
+<ul>
+<li>org.apache.httpcomponents:httpasyncclient</li>
+<li>org.apache.httpcomponents:httpcore-nio</li>
+<li>org.apache.httpcomponents:<strong>httpclient</strong></li>
+<li>org.apache.httpcomponents:httpcore</li>
+<li>commons-codec:commons-codec</li>
+<li>commons-logging:commons-logging</li>
+</ul>
+</li>
+<li>
+<p><code>elasticsearch-rest-high-level-client</code> 使用 9200 HTTP 协议进行通讯，对常用操作进行语义化封装，相对低阶API 更加友好，但是想要的功能并不一定封装全，任何未实现的功能可通过 低阶API进行操作</p>
+<ul>
+<li>org.elasticsearch.client:<strong>elasticsearch-rest-client</strong></li>
+<li>org.elasticsearch:<strong>elasticsearch</strong></li>
+<li>org.elasticsearch.plugin:parent-join-client</li>
+<li>org.elasticsearch.plugin:aggs-matrix-stats-client</li>
+</ul>
+</li>
+<li>
+<p><code>transport</code> 使用 9300 TCP 协议端口进行通讯，性能好</p>
+<ul>
+<li>transport-netty3-client</li>
+<li><strong>transport-netty4-client</strong></li>
+<li>reindex-client
+<ul>
+<li><strong>elasticsearch-rest-client</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>官方建议使用 REST 方式， <code>transport</code>  在 7.0 开始废弃，8.0版本移除</p>
+<p>详见官方文档：https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/client.html</p>
+</blockquote>
+<blockquote>
+<p>【【注意】】</p>
+<p>客户机应该具有与集群相同的版本，起码主版本必须一致</p>
+<p>主版本如果不一致，可能会出现调用错误</p>
+<p>次版本如果不一致，可能新功能无法使用</p>
+</blockquote>
+<h2 id="rest-client">Rest Client</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
+    <span style="color:#f92672">&lt;groupId&gt;</span>org.elasticsearch.client<span style="color:#f92672">&lt;/groupId&gt;</span>
+    <span style="color:#f92672">&lt;artifactId&gt;</span>elasticsearch-rest-client<span style="color:#f92672">&lt;/artifactId&gt;</span>
+    <span style="color:#f92672">&lt;version&gt;</span>5.6.15<span style="color:#f92672">&lt;/version&gt;</span>
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div><blockquote>
+<ul>
+<li>代码示例详见：
+<ul>
+<li><a href="https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-client">https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-client</a></li>
+</ul>
+</li>
+<li>官方入门文档：
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-low-usage-initialization.html">https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/java-rest-low-usage-initialization.html</a></li>
+</ul>
+</li>
+<li>官方 Java Doc
+<ul>
+<li><a href="https://artifacts.elastic.co/javadoc/org/elasticsearch/client/elasticsearch-rest-client/6.6.1/org/elasticsearch/client/package-summary.html">https://artifacts.elastic.co/javadoc/org/elasticsearch/client/elasticsearch-rest-client/6.6.1/org/elasticsearch/client/package-summary.html</a></li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="rest-high-level-client">Rest High Level Client</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
+    <span style="color:#f92672">&lt;groupId&gt;</span>org.elasticsearch.client<span style="color:#f92672">&lt;/groupId&gt;</span>
+    <span style="color:#f92672">&lt;artifactId&gt;</span>elasticsearch-rest-high-level-client<span style="color:#f92672">&lt;/artifactId&gt;</span>
+    <span style="color:#f92672">&lt;version&gt;</span>5.6.15<span style="color:#f92672">&lt;/version&gt;</span>
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div><p>初始化</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 通过 低阶客户端 RestClient 作为参数进行初始化
+</span><span style="color:#75715e"></span>RestHighLevelClient client <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> RestHighLevelClient<span style="color:#f92672">(</span>lowLevelRestClient<span style="color:#f92672">);</span> 
+</code></pre></div><blockquote>
+<ul>
+<li>
+<p>代码示例详见</p>
+<ul>
+<li><a href="https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-high-client">https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-rest-high-client</a></li>
+</ul>
+</li>
+<li>
+<p>官方 Java Doc</p>
+<ul>
+<li><a href="https://artifacts.elastic.co/javadoc/org/elasticsearch/client/elasticsearch-rest-high-level-client/5.6.15/index.html">https://artifacts.elastic.co/javadoc/org/elasticsearch/client/elasticsearch-rest-high-level-client/5.6.15/index.html</a></li>
+</ul>
+</li>
+<li></li>
+</ul>
+</blockquote>
+<h2 id="transport-client">Transport Client</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
+    <span style="color:#f92672">&lt;groupId&gt;</span>org.elasticsearch.client<span style="color:#f92672">&lt;/groupId&gt;</span>
+    <span style="color:#f92672">&lt;artifactId&gt;</span>transport<span style="color:#f92672">&lt;/artifactId&gt;</span>
+    <span style="color:#f92672">&lt;version&gt;</span>5.6.15<span style="color:#f92672">&lt;/version&gt;</span>
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div><blockquote>
+<ul>
+<li>代码示例详见
+<ul>
+<li><a href="https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-client">https://github.com/hello-world-example/ElasticSearch/tree/master/elasticsearch-client</a></li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h2 id="spring-data-elasticsearch">Spring Data Elasticsearch</h2>
+<blockquote>
+<p><a href="https://spring.io/projects/spring-data-elasticsearch">https://spring.io/projects/spring-data-elasticsearch</a></p>
+<p>官方文档：https://docs.spring.io/spring-data/elasticsearch/docs/3.1.5.RELEASE/reference/html/</p>
+</blockquote>
+<h2 id="read-more">Read More</h2>
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/client/index.html">官方文档 Elasticsearch Clients</a>
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/client/java-rest/current/index.html">Java REST Client</a></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/index.html">Java API</a></li>
+</ul>
+</li>
+</ul>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/ElasticSearch/java-client.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#简介">简介</a></li>
+    <li><a href="#rest-client">Rest Client</a></li>
+    <li><a href="#rest-high-level-client">Rest High Level Client</a></li>
+    <li><a href="#transport-client">Transport Client</a></li>
+    <li><a href="#spring-data-elasticsearch">Spring Data Elasticsearch</a></li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

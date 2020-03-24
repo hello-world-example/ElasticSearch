@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Core Concept"><meta property="og:title" content="" />
+<meta property="og:description" content="基础概念 Lucene 词汇表  文档 document ：索引和搜索时使用的主要数据载体，包含一个或多个存有数据的字段 字段 field ：文档的一部分，包含名称和值两部分 词 term： 一个搜索单元，表示文本中的一个词 标记 token ：在字段文本中出现的词，由这个词的文本、开始和结束偏移量以及类 型组成 倒排索引 inverted index 索引分为多个的段segment。一个段写入磁盘后就不能再更新，被删除文档的信息存储在一个单独的文件中，多个段可以通过段合并segments merge合并在一起，合并时不再需要的信息将被删除 分析器 由一个分词器 tokenizer和零个或多个标记过滤器 token filter组成，也可以有零个或多个字符映射器character mapper 评分scoring  ElasticSearch 核心概念 数据架构   **索引（index）**是Elasticsearch对逻辑数据的逻辑存储，可以把索引看成关系型数据库的表
+  存储在Elasticsearch中的主要实体叫文档（document），用关系型数据库来类比的话，一个文档相当于数据库表中的一行记录
+  文档由多个字段组成，每个字段可能多次出现在一个文档里，这样的字段叫多值字段（multivalued）。与关系型数据库不同，文档不需要有固定的结构，每个文档可以有不同的字段
+  在Elasticsearch中，一个索引对象可以存储很多不同用途的对象，文档类型让我们轻易地区分单个索引中的不同对象。但是有一个限制，不同的文档类型不能为相同的属性设置不同的类型
+  文档中的每个字段都必须根据不同类型做相应的分析， Elasticsearch在映射中存储有关字段的信息，可理解为字段类型
+   数据存储在一个或多个索引上
+索引包含各种类型的文档
+文档有很多字段
+映射定义了如何对待这些字段
+ 集群概念  Elasticsearch 可以运行在许多互相合作的服务器上，这些服务器称为集群（cluster），形成集群的每个服务器称为节点（node） 索引切分成较小的**分片（shard）**放在不同的服务器上，其中每个分片都是一个独立的Apache Lucene索引，多个分片可以加快索引和查询速度。当查询的索引分布在多个分片上时， ES 会把查询发送给每个相关的分片，并将结果合并在一起，而应用程序并不知道分片的存在。 **副本（replica）**只是一个分片的精确复制，每个分片可以有零个或多个副本 副本分片（replica shard） 可从 主分片（primary shard） 复制数据，在主分片丢失时，集群会将副本提升为新的主分片  Read More  Basic Concepts 官方文档  " />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/core-concept/" />
+
+<title>Core Concept | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li><strong>入门</strong>
+<ul>
+<li><a href="/ElasticSearch/docs/ElasticSearch/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/core-concept/"class=active>基础概念</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/ElasticSearch/profile/">Profile API</a></li>
+</ul>
+</li>
+<li><strong>监控</strong>
+<ul>
+<li><a href="/ElasticSearch/docs/ElasticSearch/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Core Concept</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#lucene-词汇表">Lucene 词汇表</a></li>
+    <li><a href="#elasticsearch-核心概念">ElasticSearch 核心概念</a>
+      <ul>
+        <li><a href="#数据架构">数据架构</a></li>
+        <li><a href="#集群概念">集群概念</a></li>
+      </ul>
+    </li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="基础概念">基础概念</h1>
+<h2 id="lucene-词汇表">Lucene 词汇表</h2>
+<ul>
+<li>文档 <code>document</code> ：索引和搜索时使用的主要数据载体，包含一个或多个存有数据的字段</li>
+<li>字段 <code>field</code> ：文档的一部分，包含名称和值两部分</li>
+<li>词 <code>term</code>： 一个搜索单元，表示文本中的一个词</li>
+<li>标记 <code>token</code> ：在字段文本中出现的词，由这个词的文本、开始和结束偏移量以及类
+型组成</li>
+<li>倒排索引 <code>inverted index</code></li>
+<li>索引分为多个的段<code>segment</code>。一个段写入磁盘后就不能再更新，被删除文档的信息存储在一个单独的文件中，多个段可以通过段合并<code>segments merge</code>合并在一起，合并时不再需要的信息将被删除</li>
+<li><code>分析器</code> 由一个分词器 <code>tokenizer</code>和零个或多个标记过滤器 <code>token filter</code>组成，也可以有零个或多个字符映射器<code>character mapper</code></li>
+<li>评分<code>scoring</code></li>
+</ul>
+<h2 id="elasticsearch-核心概念">ElasticSearch 核心概念</h2>
+<h3 id="数据架构">数据架构</h3>
+<ul>
+<li>
+<p>**索引（index）**是Elasticsearch对逻辑数据的逻辑存储，<strong>可以把索引看成关系型数据库的表</strong></p>
+</li>
+<li>
+<p>存储在Elasticsearch中的主要实体<strong>叫文档（document）</strong>，用关系型数据库来类比的话，<strong>一个文档相当于数据库表中的一行记录</strong></p>
+</li>
+<li>
+<p>文档由多个字段组成，每个字段可能多次出现在一个文档里，这样的字段叫多值字段（multivalued）。与关系型数据库不同，<strong>文档不需要有固定的结构，每个文档可以有不同的字段</strong></p>
+</li>
+<li>
+<p>在Elasticsearch中，一个索引对象可以存储很多不同用途的对象，<strong>文档类型</strong>让我们轻易地区分单个索引中的不同对象。<strong>但是有一个限制，不同的文档类型不能为相同的属性设置不同的类型</strong></p>
+</li>
+<li>
+<p>文档中的每个字段都必须根据不同类型做相应的分析， Elasticsearch在<strong>映射</strong>中存储有关字段的信息，可理解为字段类型</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>数据</strong>存储在一个或多个<strong>索引</strong>上</p>
+<p><strong>索引</strong>包含各种类型的<strong>文档</strong></p>
+<p><strong>文档</strong>有很多<strong>字段</strong></p>
+<p><strong>映射</strong>定义了如何对待这些<strong>字段</strong></p>
+</blockquote>
+<h3 id="集群概念">集群概念</h3>
+<ul>
+<li>Elasticsearch 可以运行在许多互相合作的服务器上，这些服务器称为<strong>集群（cluster）</strong>，形成集群的每个服务器称为<strong>节点（node）</strong></li>
+<li>索引切分成较小的**分片（shard）**放在不同的服务器上，其中每个分片都是一个独立的Apache Lucene索引，多个分片可以加快索引和查询速度。当查询的索引分布在多个分片上时， ES 会把查询发送给每个相关的分片，并将结果合并在一起，而应用程序并不知道分片的存在。</li>
+<li>**副本（replica）**只是一个分片的精确复制，每个分片可以有零个或多个副本</li>
+<li><strong>副本分片（replica shard）</strong> 可从 <strong>主分片（primary shard）</strong> 复制数据，在主分片丢失时，集群会将副本提升为新的主分片</li>
+</ul>
+<h2 id="read-more">Read More</h2>
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.6/getting-started-concepts.html">Basic Concepts</a> 官方文档</li>
+</ul>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/ElasticSearch/core-concept.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#lucene-词汇表">Lucene 词汇表</a></li>
+    <li><a href="#elasticsearch-核心概念">ElasticSearch 核心概念</a>
+      <ul>
+        <li><a href="#数据架构">数据架构</a></li>
+        <li><a href="#集群概念">集群概念</a></li>
+      </ul>
+    </li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

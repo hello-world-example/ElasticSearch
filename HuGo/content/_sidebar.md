@@ -1,20 +1,18 @@
 ---
 headless: true
 ---
+* **入门**
+  * [版本历史]({{< relref "/docs/ElasticSearch/version-history.md" >}})  
+  * [基础概念]({{< relref "/docs/ElasticSearch/core-concept.md" >}})  
+  * [快速开始]({{< relref "/docs/ElasticSearch/quick-start.md" >}})  
+  * [快速认识 RESTful API]({{< relref "/docs/ElasticSearch/quick-start-crud.md" >}})  
+  * [Java Client]({{< relref "/docs/ElasticSearch/java-client.md" >}})  
+  * [插件机制]({{< relref "/docs/ElasticSearch/plugins.md" >}})  
+  * [IK 中文分词 插件]({{< relref "/docs/ElasticSearch/ik-plugin.md" >}})  
+  * [导入导出]({{< relref "/docs/ElasticSearch/dump.md" >}})  
+  * [Profile API]({{< relref "/docs/ElasticSearch/profile.md" >}})  
+* **监控**
+  * [elasticsearch-metrics 监控]({{< relref "/docs/ElasticSearch/Metrics/elasticsearch-metrics.md" >}})  
+  
+  
 
-
-- [**Example Site**]({{< relref "/docs/example" >}})
- - [Table of Contents]({{< relref "/docs/example/table-of-contents" >}})
-   - [With ToC]({{< relref "/docs/example/table-of-contents/with-toc" >}})
-   - [Without ToC]({{< relref "/docs/example/table-of-contents/without-toc" >}})
- - [2nd]({{< relref "/docs/example/2nd" >}})
-   - [3rd]({{< relref "/docs/example/2nd/3rd" >}})
-     - [4th]({{< relref "/docs/example/2nd/3rd/4th" >}})  
- - **Shortcodes**
-   - [Buttons]({{< relref "/docs/shortcodes/buttons" >}})
-   - [Columns]({{< relref "/docs/shortcodes/columns" >}})
-   - [Expand]({{< relref "/docs/shortcodes/expand" >}})
-   - [Hints]({{< relref "/docs/shortcodes/hints" >}})
-   - [Katex]({{< relref "/docs/shortcodes/katex" >}})
-   - [Mermaid]({{< relref "/docs/shortcodes/mermaid" >}})
-   - [Tabs]({{< relref "/docs/shortcodes/tabs" >}})  
