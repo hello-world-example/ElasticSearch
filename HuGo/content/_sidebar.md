@@ -13,6 +13,8 @@ headless: true
   * [Profile API]({{< relref "/docs/ElasticSearch/profile.md" >}})  
 * **监控**
   * [elasticsearch-metrics 监控]({{< relref "/docs/ElasticSearch/Metrics/elasticsearch-metrics.md" >}})  
+  * _cat
+  * 
   
   
 
