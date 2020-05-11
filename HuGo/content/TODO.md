@@ -10,7 +10,7 @@
 - 参数
 - **要看哪些东西**
 
-/_cat/segments/ttpai-pinpointx-tracelog-2020.03.17?v
+/_cat/segments/pinpointx-tracelog-2020.03.17?v
 
 POST /index_name/_forcemerge?max_num_segments=1
 
