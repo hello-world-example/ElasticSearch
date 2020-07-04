@@ -17,12 +17,12 @@
  集群概念  Elasticsearch 可以运行在许多互相合作的服务器上，这些服务器称为集群（cluster），形成集群的每个服务器称为节点（node） 索引切分成较小的**分片（shard）**放在不同的服务器上，其中每个分片都是一个独立的Apache Lucene索引，多个分片可以加快索引和查询速度。当查询的索引分布在多个分片上时， ES 会把查询发送给每个相关的分片，并将结果合并在一起，而应用程序并不知道分片的存在。 **副本（replica）**只是一个分片的精确复制，每个分片可以有零个或多个副本 副本分片（replica shard） 可从 主分片（primary shard） 复制数据，在主分片丢失时，集群会将副本提升为新的主分片  Read More  Basic Concepts 官方文档  " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Basic/core-concept/" />
-
+<meta property="article:modified_time" content="2020-07-04T11:44:01+08:00" />
 <title>Core Concept | ElasticSearch</title>
 <link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
 
 
-<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+<link rel="stylesheet" href="/ElasticSearch/book.min.27c9780f144e30b05778b1a8e10cc4a7416874a42deb26a6ddaddad5f3d13e39.css" integrity="sha256-J8l4DxROMLBXeLGo4QzEp0FodKQt6yam3a3a1fPRPjk=">
 
 
 <!--
@@ -117,14 +117,18 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#lucene-词汇表">Lucene 词汇表</a></li>
-    <li><a href="#elasticsearch-核心概念">ElasticSearch 核心概念</a>
+    <li><a href="#基础概念">基础概念</a>
       <ul>
-        <li><a href="#数据架构">数据架构</a></li>
-        <li><a href="#集群概念">集群概念</a></li>
+        <li><a href="#lucene-词汇表">Lucene 词汇表</a></li>
+        <li><a href="#elasticsearch-核心概念">ElasticSearch 核心概念</a>
+          <ul>
+            <li><a href="#数据架构">数据架构</a></li>
+            <li><a href="#集群概念">集群概念</a></li>
+          </ul>
+        </li>
+        <li><a href="#read-more">Read More</a></li>
       </ul>
     </li>
-    <li><a href="#read-more">Read More</a></li>
   </ul>
 </nav>
 
@@ -193,6 +197,14 @@ https://github.com/alex-shpak/hugo-book
 
 
 
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/commit/8c67217900ca83ae385789c9cf5836ae9f4444ee" title='Last modified by kaibin.yang | Jul 4, 2020' target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Jul 4, 2020</span>
+    </a>
+  </div>
+
 
 
   <div>
@@ -221,14 +233,18 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#lucene-词汇表">Lucene 词汇表</a></li>
-    <li><a href="#elasticsearch-核心概念">ElasticSearch 核心概念</a>
+    <li><a href="#基础概念">基础概念</a>
       <ul>
-        <li><a href="#数据架构">数据架构</a></li>
-        <li><a href="#集群概念">集群概念</a></li>
+        <li><a href="#lucene-词汇表">Lucene 词汇表</a></li>
+        <li><a href="#elasticsearch-核心概念">ElasticSearch 核心概念</a>
+          <ul>
+            <li><a href="#数据架构">数据架构</a></li>
+            <li><a href="#集群概念">集群概念</a></li>
+          </ul>
+        </li>
+        <li><a href="#read-more">Read More</a></li>
       </ul>
     </li>
-    <li><a href="#read-more">Read More</a></li>
   </ul>
 </nav>
 

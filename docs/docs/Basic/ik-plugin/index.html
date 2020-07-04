@@ -8,12 +8,12 @@
 <meta property="og:description" content="IK 中文分词 安装 # https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip $ Version=$(curl -s http://localhost:9200 | grep number | awk -F &#39;&#34;&#39; &#39;{print $4}&#39;) $ ./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v${Version}/elasticsearch-analysis-ik-${Version}.zip -&gt; Downloading https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v5.6.12/elasticsearch-analysis-ik-5.6.12.zip [===========================&gt; ] 56% 安装后启动报错问题 报错内容 [2019-02-26T07:19:11,994][INFO ][o.e.n.Node ] [KpRS12p] started [2019-02-26T07:19:12,421][INFO ][o.w.a.d.Monitor ] try load config from /usr/share/elasticsearch/config/analysis-ik/IKAnalyzer.cfg.xml [2019-02-26T07:19:12,425][INFO ][o.w.a.d.Monitor ] try load config from /usr/share/elasticsearch/plugins/analysis-ik/config/IKAnalyzer.cfg.xml [2019-02-26T07:19:12,426][ERROR][o.w.a.d.Monitor ] ik-analyzer java.io.FileNotFoundException: /usr/share/elasticsearch/config/analysis-ik/IKAnalyzer.cfg.xml (No such file or directory) at java.io.FileInputStream.open0(Native Method) ~[?:1.8.0_181] at java.io.FileInputStream.open(FileInputStream.java:195) ~[?:1.8.0_181] at java.io.FileInputStream.&lt;init&gt;(FileInputStream.java:138) ~[?" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Basic/ik-plugin/" />
-
+<meta property="article:modified_time" content="2020-07-04T11:44:01+08:00" />
 <title>Ik Plugin | ElasticSearch</title>
 <link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
 
 
-<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+<link rel="stylesheet" href="/ElasticSearch/book.min.27c9780f144e30b05778b1a8e10cc4a7416874a42deb26a6ddaddad5f3d13e39.css" integrity="sha256-J8l4DxROMLBXeLGo4QzEp0FodKQt6yam3a3a1fPRPjk=">
 
 
 <!--
@@ -108,17 +108,21 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#安装">安装</a></li>
-    <li><a href="#安装后启动报错问题">安装后启动报错问题</a>
+    <li><a href="#ik-中文分词">IK 中文分词</a>
       <ul>
-        <li><a href="#报错内容">报错内容</a></li>
-        <li><a href="#docker-环境解决方式">Docker 环境解决方式</a></li>
-        <li><a href="#解压方式安装插件">解压方式安装插件</a></li>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#安装后启动报错问题">安装后启动报错问题</a>
+          <ul>
+            <li><a href="#报错内容">报错内容</a></li>
+            <li><a href="#docker-环境解决方式">Docker 环境解决方式</a></li>
+            <li><a href="#解压方式安装插件">解压方式安装插件</a></li>
+          </ul>
+        </li>
+        <li><a href="#新增文档测试">新增文档测试</a></li>
+        <li><a href="#ik_max_word-和-ik_smart-的区别">ik_max_word 和 ik_smart 的区别</a></li>
+        <li><a href="#read-more">Read More</a></li>
       </ul>
     </li>
-    <li><a href="#新增文档测试">新增文档测试</a></li>
-    <li><a href="#ik_max_word-和-ik_smart-的区别">ik_max_word 和 ik_smart 的区别</a></li>
-    <li><a href="#read-more">Read More</a></li>
   </ul>
 </nav>
 
@@ -336,6 +340,14 @@ POST /index_ik_test/fulltext/_search
 
 
 
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/commit/8c67217900ca83ae385789c9cf5836ae9f4444ee" title='Last modified by kaibin.yang | Jul 4, 2020' target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Jul 4, 2020</span>
+    </a>
+  </div>
+
 
 
   <div>
@@ -364,17 +376,21 @@ POST /index_ik_test/fulltext/_search
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#安装">安装</a></li>
-    <li><a href="#安装后启动报错问题">安装后启动报错问题</a>
+    <li><a href="#ik-中文分词">IK 中文分词</a>
       <ul>
-        <li><a href="#报错内容">报错内容</a></li>
-        <li><a href="#docker-环境解决方式">Docker 环境解决方式</a></li>
-        <li><a href="#解压方式安装插件">解压方式安装插件</a></li>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#安装后启动报错问题">安装后启动报错问题</a>
+          <ul>
+            <li><a href="#报错内容">报错内容</a></li>
+            <li><a href="#docker-环境解决方式">Docker 环境解决方式</a></li>
+            <li><a href="#解压方式安装插件">解压方式安装插件</a></li>
+          </ul>
+        </li>
+        <li><a href="#新增文档测试">新增文档测试</a></li>
+        <li><a href="#ik_max_word-和-ik_smart-的区别">ik_max_word 和 ik_smart 的区别</a></li>
+        <li><a href="#read-more">Read More</a></li>
       </ul>
     </li>
-    <li><a href="#新增文档测试">新增文档测试</a></li>
-    <li><a href="#ik_max_word-和-ik_smart-的区别">ik_max_word 和 ik_smart 的区别</a></li>
-    <li><a href="#read-more">Read More</a></li>
   </ul>
 </nav>
 

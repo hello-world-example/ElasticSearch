@@ -8,12 +8,12 @@
 <meta property="og:description" content="elasticsearch-metrics   官方文档：https://grafana.com/grafana/dashboards/878 Github: https://github.com/trevorndodds/elasticsearch-metrics   安装监控脚本 # 下载 Python 文件 $ wget https://raw.githubusercontent.com/trevorndodds/elasticsearch-metrics/master/Grafana/elasticsearch2elastic.py # 编辑 # 修改 ES_METRICS_CLUSTER_URL &amp; ES_METRICS_MONITORING_CLUSTER_URL 为 ES 地址 $ vim elasticsearch2elastic.py # 启动脚本（建议后台运行） $ python elasticsearch2elastic.py 导入 Grafana Dashboard 创建 DataSource  Name：ElasticSearch-Metrics Type：ElasticSearch HTTP  URL：http://x.x.x.x:9200   Elasticsearch details  Pattern：Daily Index name：[elasticsearch_metrics-]YYYY.MM.DD Time field name： @timestamp    导入模板  模板文件：https://grafana.com/api/dashboards/878/revisions/8/download 选择数据源：ElasticSearch-Metrics  大致原理  每 60s（ ES_METRICS_INTERVAL 配置） 调用 ES 原生 API 获取监控数据  /_cluster/health /_cluster/stats /_cat/nodes?" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Metrics/elasticsearch-metrics/" />
-
+<meta property="article:modified_time" content="2020-07-04T11:44:01+08:00" />
 <title>Elasticsearch Metrics | ElasticSearch</title>
 <link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
 
 
-<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+<link rel="stylesheet" href="/ElasticSearch/book.min.27c9780f144e30b05778b1a8e10cc4a7416874a42deb26a6ddaddad5f3d13e39.css" integrity="sha256-J8l4DxROMLBXeLGo4QzEp0FodKQt6yam3a3a1fPRPjk=">
 
 
 <!--
@@ -108,14 +108,18 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#安装监控脚本">安装监控脚本</a></li>
-    <li><a href="#导入-grafana-dashboard">导入 Grafana Dashboard</a>
+    <li><a href="#elasticsearch-metrics">elasticsearch-metrics</a>
       <ul>
-        <li><a href="#创建-datasource">创建 DataSource</a></li>
-        <li><a href="#导入模板">导入模板</a></li>
+        <li><a href="#安装监控脚本">安装监控脚本</a></li>
+        <li><a href="#导入-grafana-dashboard">导入 Grafana Dashboard</a>
+          <ul>
+            <li><a href="#创建-datasource">创建 DataSource</a></li>
+            <li><a href="#导入模板">导入模板</a></li>
+          </ul>
+        </li>
+        <li><a href="#大致原理">大致原理</a></li>
       </ul>
     </li>
-    <li><a href="#大致原理">大致原理</a></li>
   </ul>
 </nav>
 
@@ -187,6 +191,14 @@ $ python elasticsearch2elastic.py
 
 
 
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/commit/8c67217900ca83ae385789c9cf5836ae9f4444ee" title='Last modified by kaibin.yang | Jul 4, 2020' target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Jul 4, 2020</span>
+    </a>
+  </div>
+
 
 
   <div>
@@ -215,14 +227,18 @@ $ python elasticsearch2elastic.py
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#安装监控脚本">安装监控脚本</a></li>
-    <li><a href="#导入-grafana-dashboard">导入 Grafana Dashboard</a>
+    <li><a href="#elasticsearch-metrics">elasticsearch-metrics</a>
       <ul>
-        <li><a href="#创建-datasource">创建 DataSource</a></li>
-        <li><a href="#导入模板">导入模板</a></li>
+        <li><a href="#安装监控脚本">安装监控脚本</a></li>
+        <li><a href="#导入-grafana-dashboard">导入 Grafana Dashboard</a>
+          <ul>
+            <li><a href="#创建-datasource">创建 DataSource</a></li>
+            <li><a href="#导入模板">导入模板</a></li>
+          </ul>
+        </li>
+        <li><a href="#大致原理">大致原理</a></li>
       </ul>
     </li>
-    <li><a href="#大致原理">大致原理</a></li>
   </ul>
 </nav>
 

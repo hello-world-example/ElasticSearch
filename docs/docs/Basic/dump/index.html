@@ -9,12 +9,12 @@
  安装 $ mkdir /opt/websuite/elasticdump $ cd /opt/websuite/elasticdump # 本地安装 $ npm install elasticdump # 查看帮助 $ ./node_modules/elasticdump/bin/elasticdump --help 常用命令 # # 导出 # $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=http://172.16.2.164:9200/dev_carmodel \  --output=/tmp/es/dev_carmodel_mapping.json \  --type=mapping $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=http://172.16.2.164:9200/dev_carmodel \  --output=/tmp/es/dev_carmodel_data.json \  --type=data # # 导入 # $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=/tmp/es/dev_carmodel_data.json \  --output=http://172.16.2.164:9200/dev_carmodel_dump \  --type=data # # 复制数据 # $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=http://172." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Basic/dump/" />
-
+<meta property="article:modified_time" content="2020-07-04T11:44:01+08:00" />
 <title>Dump | ElasticSearch</title>
 <link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
 
 
-<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+<link rel="stylesheet" href="/ElasticSearch/book.min.27c9780f144e30b05778b1a8e10cc4a7416874a42deb26a6ddaddad5f3d13e39.css" integrity="sha256-J8l4DxROMLBXeLGo4QzEp0FodKQt6yam3a3a1fPRPjk=">
 
 
 <!--
@@ -109,10 +109,14 @@ https://github.com/alex-shpak/hugo-book
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#elasticsearch-dump">elasticsearch-dump</a>
+    <li><a href="#导入导出">导入导出</a>
       <ul>
-        <li><a href="#安装">安装</a></li>
-        <li><a href="#常用命令">常用命令</a></li>
+        <li><a href="#elasticsearch-dump">elasticsearch-dump</a>
+          <ul>
+            <li><a href="#安装">安装</a></li>
+            <li><a href="#常用命令">常用命令</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -195,6 +199,14 @@ $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump  <span styl
 
 
 
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/commit/8c67217900ca83ae385789c9cf5836ae9f4444ee" title='Last modified by kaibin.yang | Jul 4, 2020' target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Jul 4, 2020</span>
+    </a>
+  </div>
+
 
 
   <div>
@@ -223,10 +235,14 @@ $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump  <span styl
       
   <nav id="TableOfContents">
   <ul>
-    <li><a href="#elasticsearch-dump">elasticsearch-dump</a>
+    <li><a href="#导入导出">导入导出</a>
       <ul>
-        <li><a href="#安装">安装</a></li>
-        <li><a href="#常用命令">常用命令</a></li>
+        <li><a href="#elasticsearch-dump">elasticsearch-dump</a>
+          <ul>
+            <li><a href="#安装">安装</a></li>
+            <li><a href="#常用命令">常用命令</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
