@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Dump"><meta property="og:title" content="" />
+<meta property="og:description" content="导入导出 elasticsearch-dump  详见官方文档： https://github.com/taskrabbit/elasticsearch-dump
+ 安装 $ mkdir /opt/websuite/elasticdump $ cd /opt/websuite/elasticdump # 本地安装 $ npm install elasticdump # 查看帮助 $ ./node_modules/elasticdump/bin/elasticdump --help 常用命令 # # 导出 # $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=http://172.16.2.164:9200/dev_carmodel \  --output=/tmp/es/dev_carmodel_mapping.json \  --type=mapping $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=http://172.16.2.164:9200/dev_carmodel \  --output=/tmp/es/dev_carmodel_data.json \  --type=data # # 导入 # $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=/tmp/es/dev_carmodel_data.json \  --output=http://172.16.2.164:9200/dev_carmodel_dump \  --type=data # # 复制数据 # $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=http://172." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Basic/dump/" />
+
+<title>Dump | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li>
+<p><strong>入门</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Basic/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/Basic/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/Basic/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/Basic/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/Basic/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/Basic/dump/"class=active>导入导出</a></li>
+<li><a href="/ElasticSearch/docs/Basic/profile/">Profile API</a></li>
+</ul>
+</li>
+<li>
+<p><strong>优化</strong></p>
+<ul>
+<li>..</li>
+</ul>
+</li>
+<li>
+<p><strong>监控</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Metrics/EsRally/">_Esrally 压测工具</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/_cat/">_cat  接口</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Dump</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#elasticsearch-dump">elasticsearch-dump</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#常用命令">常用命令</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="导入导出">导入导出</h1>
+<h2 id="elasticsearch-dump">elasticsearch-dump</h2>
+<blockquote>
+<p>详见官方文档： <a href="https://github.com/taskrabbit/elasticsearch-dump">https://github.com/taskrabbit/elasticsearch-dump</a></p>
+</blockquote>
+<h3 id="安装">安装</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ mkdir /opt/websuite/elasticdump
+$ cd /opt/websuite/elasticdump
+
+<span style="color:#75715e"># 本地安装</span>
+$ npm install elasticdump
+
+<span style="color:#75715e"># 查看帮助</span>
+$ ./node_modules/elasticdump/bin/elasticdump --help
+</code></pre></div><h3 id="常用命令">常用命令</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">#
+<span style="color:#75715e"># 导出</span>
+#
+$ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump  <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --input<span style="color:#f92672">=</span>http://172.16.2.164:9200/dev_carmodel <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --output<span style="color:#f92672">=</span>/tmp/es/dev_carmodel_mapping.json <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --type<span style="color:#f92672">=</span>mapping
+  
+$ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump  <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --input<span style="color:#f92672">=</span>http://172.16.2.164:9200/dev_carmodel <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --output<span style="color:#f92672">=</span>/tmp/es/dev_carmodel_data.json <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --type<span style="color:#f92672">=</span>data
+  
+#
+<span style="color:#75715e"># 导入</span>
+#
+$ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump  <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --input<span style="color:#f92672">=</span>/tmp/es/dev_carmodel_data.json <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --output<span style="color:#f92672">=</span>http://172.16.2.164:9200/dev_carmodel_dump <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --type<span style="color:#f92672">=</span>data
+  
+#
+<span style="color:#75715e"># 复制数据</span>
+#
+$ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump  <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --input<span style="color:#f92672">=</span>http://172.16.2.164:9200/dev_carmodel <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  --output<span style="color:#f92672">=</span>http://172.16.2.164:9200/dev_carmodel_dump
+  
+<span style="color:#75715e"># 删除测试数据</span>
+<span style="color:#75715e"># curl -X DELETE http://172.16.2.164:9200/dev_carmodel_dump</span>
+
+<span style="color:#75715e"># 替换ID，导入多次</span>
+<span style="color:#66d9ef">for</span> i in <span style="color:#f92672">{</span>1..5<span style="color:#f92672">}</span> ; <span style="color:#66d9ef">do</span> 
+  cat dev_carmodel.json | sed <span style="color:#e6db74">&#34;s/,\&#34;_id\&#34;:\&#34;/,\&#34;_id\&#34;:\&#34;</span><span style="color:#e6db74">${</span>i<span style="color:#e6db74">}</span><span style="color:#e6db74">-/g&#34;</span> &gt;&gt;  dev_carmodel_multi.json; 
+<span style="color:#66d9ef">done</span>
+</code></pre></div><p>TODO</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+	<span style="color:#960050;background-color:#1e0010">_index:</span> <span style="color:#960050;background-color:#1e0010">&#39;dev_carmodel_dump&#39;,</span>
+	<span style="color:#960050;background-color:#1e0010">_type:</span> <span style="color:#960050;background-color:#1e0010">&#39;vehiclebrand&#39;,</span>
+	<span style="color:#960050;background-color:#1e0010">_id:</span> <span style="color:#960050;background-color:#1e0010">&#39;5-3883&#39;,</span>
+	<span style="color:#960050;background-color:#1e0010">status:</span> <span style="color:#960050;background-color:#1e0010">429,</span>
+	<span style="color:#960050;background-color:#1e0010">error:</span> <span style="color:#960050;background-color:#1e0010">{</span>
+		<span style="color:#960050;background-color:#1e0010">type:</span> <span style="color:#960050;background-color:#1e0010">&#39;es_rejected_execution_exception&#39;,</span>
+		<span style="color:#960050;background-color:#1e0010">reason:</span> <span style="color:#960050;background-color:#1e0010">&#39;rejected</span> <span style="color:#960050;background-color:#1e0010">execution</span> <span style="color:#960050;background-color:#1e0010">of</span> <span style="color:#960050;background-color:#1e0010">org.elasticsearch.transport.TransportService$7@3f96bcef</span> <span style="color:#960050;background-color:#1e0010">on</span> <span style="color:#960050;background-color:#1e0010">EsThreadPoolExecutor[bulk,</span> <span style="color:#960050;background-color:#1e0010">queue</span> <span style="color:#960050;background-color:#1e0010">capacity</span> <span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#960050;background-color:#1e0010">200,</span> <span style="color:#960050;background-color:#1e0010">org.elasticsearch.common.util.concurrent.EsThreadPoolExecutor@6c40d30e[Running,</span> <span style="color:#960050;background-color:#1e0010">pool</span> <span style="color:#960050;background-color:#1e0010">size</span> <span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#960050;background-color:#1e0010">4,</span> <span style="color:#960050;background-color:#1e0010">active</span> <span style="color:#960050;background-color:#1e0010">threads</span> <span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#960050;background-color:#1e0010">4,</span> <span style="color:#960050;background-color:#1e0010">queued</span> <span style="color:#960050;background-color:#1e0010">tasks</span> <span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#960050;background-color:#1e0010">258,</span> <span style="color:#960050;background-color:#1e0010">completed</span> <span style="color:#960050;background-color:#1e0010">tasks</span> <span style="color:#960050;background-color:#1e0010">=</span> <span style="color:#960050;background-color:#1e0010">436492]]&#39;</span>
+	}
+<span style="color:#960050;background-color:#1e0010">}</span>
+</code></pre></div></article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/Basic/dump.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#elasticsearch-dump">elasticsearch-dump</a>
+      <ul>
+        <li><a href="#安装">安装</a></li>
+        <li><a href="#常用命令">常用命令</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

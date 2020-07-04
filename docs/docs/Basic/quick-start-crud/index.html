@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Quick Start Crud"><meta property="og:title" content="" />
+<meta property="og:description" content="RESTful 增删改查 状态查询 基本信息 $ curl -X GET &#39;http://localhost:9200/&#39; { &#34;name&#34; : &#34;KpRS12p&#34;, &#34;cluster_name&#34; : &#34;elasticsearch&#34;, &#34;cluster_uuid&#34; : &#34;PU5vpob2Q1GyVV-P9o0OwQ&#34;, &#34;version&#34; : { &#34;number&#34; : &#34;5.6.12&#34;, &#34;build_hash&#34; : &#34;cfe3d9f&#34;, &#34;build_date&#34; : &#34;2018-09-10T20:12:43.732Z&#34;, &#34;build_snapshot&#34; : false, &#34;lucene_version&#34; : &#34;6.6.1&#34; }, &#34;tagline&#34; : &#34;You Know, for Search&#34; } 文档个数 $ curl -X GET &#39;http://localhost:9200/_count?pretty&#39; { &#34;count&#34; : 12, &#34;_shards&#34; : { &#34;total&#34; : 6, &#34;successful&#34; : 6, &#34;skipped&#34; : 0, &#34;failed&#34; : 0 } } 集群节点状态 $ curl -X GET &#39;http://localhost:9200/_cluster/state/nodes/?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Basic/quick-start-crud/" />
+
+<title>Quick Start Crud | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li>
+<p><strong>入门</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Basic/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/Basic/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start-crud/"class=active>快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/Basic/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/Basic/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/Basic/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/Basic/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/Basic/profile/">Profile API</a></li>
+</ul>
+</li>
+<li>
+<p><strong>优化</strong></p>
+<ul>
+<li>..</li>
+</ul>
+</li>
+<li>
+<p><strong>监控</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Metrics/EsRally/">_Esrally 压测工具</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/_cat/">_cat  接口</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Quick Start Crud</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#状态查询">状态查询</a>
+      <ul>
+        <li><a href="#基本信息">基本信息</a></li>
+        <li><a href="#文档个数">文档个数</a></li>
+        <li><a href="#集群节点状态">集群节点状态</a></li>
+      </ul>
+    </li>
+    <li><a href="#文档管理-crud">文档管理 CRUD</a>
+      <ul>
+        <li><a href="#创建或更新">创建或更新</a></li>
+        <li><a href="#新增文档">新增文档</a></li>
+        <li><a href="#查询指定文档">查询指定文档</a></li>
+        <li><a href="#更新文档字段">更新文档字段</a></li>
+        <li><a href="#获取索引映射管理">获取索引映射管理</a></li>
+        <li><a href="#搜索所有文档">搜索所有文档</a></li>
+        <li><a href="#删除索引">删除索引</a></li>
+      </ul>
+    </li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="restful-增删改查">RESTful 增删改查</h1>
+<h2 id="状态查询">状态查询</h2>
+<h3 id="基本信息">基本信息</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl -X GET <span style="color:#e6db74">&#39;http://localhost:9200/&#39;</span>
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;name&#34;</span> : <span style="color:#e6db74">&#34;KpRS12p&#34;</span>,
+  <span style="color:#e6db74">&#34;cluster_name&#34;</span> : <span style="color:#e6db74">&#34;elasticsearch&#34;</span>,
+  <span style="color:#e6db74">&#34;cluster_uuid&#34;</span> : <span style="color:#e6db74">&#34;PU5vpob2Q1GyVV-P9o0OwQ&#34;</span>,
+  <span style="color:#e6db74">&#34;version&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;number&#34;</span> : <span style="color:#e6db74">&#34;5.6.12&#34;</span>,
+    <span style="color:#e6db74">&#34;build_hash&#34;</span> : <span style="color:#e6db74">&#34;cfe3d9f&#34;</span>,
+    <span style="color:#e6db74">&#34;build_date&#34;</span> : <span style="color:#e6db74">&#34;2018-09-10T20:12:43.732Z&#34;</span>,
+    <span style="color:#e6db74">&#34;build_snapshot&#34;</span> : false,
+    <span style="color:#e6db74">&#34;lucene_version&#34;</span> : <span style="color:#e6db74">&#34;6.6.1&#34;</span>
+  <span style="color:#f92672">}</span>,
+  <span style="color:#e6db74">&#34;tagline&#34;</span> : <span style="color:#e6db74">&#34;You Know, for Search&#34;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="文档个数">文档个数</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl -X GET <span style="color:#e6db74">&#39;http://localhost:9200/_count?pretty&#39;</span>
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;count&#34;</span> : 12,
+  <span style="color:#e6db74">&#34;_shards&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;total&#34;</span> : 6,
+    <span style="color:#e6db74">&#34;successful&#34;</span> : 6,
+    <span style="color:#e6db74">&#34;skipped&#34;</span> : 0,
+    <span style="color:#e6db74">&#34;failed&#34;</span> : <span style="color:#ae81ff">0</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="集群节点状态">集群节点状态</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl -X GET <span style="color:#e6db74">&#39;http://localhost:9200/_cluster/state/nodes/?pretty&#39;</span>
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;cluster_name&#34;</span> : <span style="color:#e6db74">&#34;elasticsearch&#34;</span>,
+  <span style="color:#e6db74">&#34;nodes&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;KpRS12pATMmPQv_emx6Szg&#34;</span> : <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;name&#34;</span> : <span style="color:#e6db74">&#34;KpRS12p&#34;</span>,
+      <span style="color:#e6db74">&#34;ephemeral_id&#34;</span> : <span style="color:#e6db74">&#34;iGiUhJ7gRImn5g0TYjlYbQ&#34;</span>,
+      <span style="color:#e6db74">&#34;transport_address&#34;</span> : <span style="color:#e6db74">&#34;127.0.0.1:9300&#34;</span>,
+      <span style="color:#e6db74">&#34;attributes&#34;</span> : <span style="color:#f92672">{</span> <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="文档管理-crud">文档管理 CRUD</h2>
+<h3 id="创建或更新">创建或更新</h3>
+<p>如果 <code>/&lt;_id&gt;</code> 存在则为更新，如果不存在则为创建</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl -X PUT -d <span style="color:#e6db74">&#39;{&#34;id&#34;:&#34;1&#34;,&#34;title&#34;:&#34;New version of Elasticsearch released!!!!&#34;,&#34;content&#34;:&#34;Version 1.0 released today!&#34;}&#39;</span> <span style="color:#e6db74">&#39;http://localhost:9200/blog/article/2?pretty&#39;</span>
+
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;_index&#34;</span> : <span style="color:#e6db74">&#34;blog&#34;</span>,
+  <span style="color:#e6db74">&#34;_type&#34;</span> : <span style="color:#e6db74">&#34;article&#34;</span>,
+  <span style="color:#e6db74">&#34;_id&#34;</span> : <span style="color:#e6db74">&#34;2&#34;</span>,
+  <span style="color:#e6db74">&#34;_version&#34;</span> : 7,
+  <span style="color:#e6db74">&#34;result&#34;</span> : <span style="color:#e6db74">&#34;updated&#34;</span>,
+  <span style="color:#e6db74">&#34;_shards&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;total&#34;</span> : 2,
+    <span style="color:#e6db74">&#34;successful&#34;</span> : 1,
+    <span style="color:#e6db74">&#34;failed&#34;</span> : <span style="color:#ae81ff">0</span>
+  <span style="color:#f92672">}</span>,
+  <span style="color:#e6db74">&#34;created&#34;</span> : false
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="新增文档">新增文档</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl -X POST -d <span style="color:#e6db74">&#39;{&#34;title&#34;:&#34;新增文档&#34;,&#34;content&#34;:&#34;内容1&#34;}&#39;</span> <span style="color:#e6db74">&#39;http://localhost:9200/blog/article?pretty&#39;</span>
+
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;_index&#34;</span> : <span style="color:#e6db74">&#34;blog&#34;</span>,
+  <span style="color:#e6db74">&#34;_type&#34;</span> : <span style="color:#e6db74">&#34;article&#34;</span>,
+  <span style="color:#e6db74">&#34;_id&#34;</span> : <span style="color:#e6db74">&#34;AWkaOUZRo273Me3hdpnS&#34;</span>,
+  <span style="color:#e6db74">&#34;_version&#34;</span> : 1,
+  <span style="color:#e6db74">&#34;result&#34;</span> : <span style="color:#e6db74">&#34;created&#34;</span>,
+  <span style="color:#e6db74">&#34;_shards&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;total&#34;</span> : 2,
+    <span style="color:#e6db74">&#34;successful&#34;</span> : 1,
+    <span style="color:#e6db74">&#34;failed&#34;</span> : <span style="color:#ae81ff">0</span>
+  <span style="color:#f92672">}</span>,
+  <span style="color:#e6db74">&#34;created&#34;</span> : true
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="查询指定文档">查询指定文档</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl -X GET <span style="color:#e6db74">&#39;http://localhost:9200/blog/article/AWkaOUZRo273Me3hdpnS?pretty&#39;</span>
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;_index&#34;</span> : <span style="color:#e6db74">&#34;blog&#34;</span>,
+  <span style="color:#e6db74">&#34;_type&#34;</span> : <span style="color:#e6db74">&#34;article&#34;</span>,
+  <span style="color:#e6db74">&#34;_id&#34;</span> : <span style="color:#e6db74">&#34;AWkaOUZRo273Me3hdpnS&#34;</span>,
+  <span style="color:#e6db74">&#34;_version&#34;</span> : 1,
+  <span style="color:#e6db74">&#34;found&#34;</span> : true,
+  <span style="color:#e6db74">&#34;_source&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;title&#34;</span> : <span style="color:#e6db74">&#34;新增文档&#34;</span>,
+    <span style="color:#e6db74">&#34;content&#34;</span> : <span style="color:#e6db74">&#34;内容1&#34;</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="更新文档字段">更新文档字段</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl -X POST -d <span style="color:#e6db74">&#39;{&#34;script&#34;:&#34;ctx._source.content = \&#34;内容2\&#34;&#34;}&#39;</span> <span style="color:#e6db74">&#39;http://localhost:9200/blog/article/AWkaOUZRo273Me3hdpnS/_update?pretty&#39;</span>
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;_index&#34;</span> : <span style="color:#e6db74">&#34;blog&#34;</span>,
+  <span style="color:#e6db74">&#34;_type&#34;</span> : <span style="color:#e6db74">&#34;article&#34;</span>,
+  <span style="color:#e6db74">&#34;_id&#34;</span> : <span style="color:#e6db74">&#34;AWkaOUZRo273Me3hdpnS&#34;</span>,
+  <span style="color:#e6db74">&#34;_version&#34;</span> : 2,
+  <span style="color:#e6db74">&#34;result&#34;</span> : <span style="color:#e6db74">&#34;updated&#34;</span>,
+  <span style="color:#e6db74">&#34;_shards&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;total&#34;</span> : 2,
+    <span style="color:#e6db74">&#34;successful&#34;</span> : 1,
+    <span style="color:#e6db74">&#34;failed&#34;</span> : <span style="color:#ae81ff">0</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="获取索引映射管理">获取索引映射管理</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl <span style="color:#e6db74">&#39;http://localhost:9200/blog/_mapping?pretty&#39;</span>
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;blog&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;mappings&#34;</span> : <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;article&#34;</span> : <span style="color:#f92672">{</span>
+        <span style="color:#e6db74">&#34;properties&#34;</span> : <span style="color:#f92672">{</span>
+          <span style="color:#e6db74">&#34;content&#34;</span> : <span style="color:#f92672">{</span>
+            <span style="color:#e6db74">&#34;type&#34;</span> : <span style="color:#e6db74">&#34;text&#34;</span>,
+            <span style="color:#e6db74">&#34;fields&#34;</span> : <span style="color:#f92672">{</span>
+              <span style="color:#e6db74">&#34;keyword&#34;</span> : <span style="color:#f92672">{</span>
+                <span style="color:#e6db74">&#34;type&#34;</span> : <span style="color:#e6db74">&#34;keyword&#34;</span>,
+                <span style="color:#e6db74">&#34;ignore_above&#34;</span> : <span style="color:#ae81ff">256</span>
+              <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+          <span style="color:#f92672">}</span>,
+          <span style="color:#e6db74">&#34;title&#34;</span> : <span style="color:#f92672">{</span>
+            <span style="color:#e6db74">&#34;type&#34;</span> : <span style="color:#e6db74">&#34;text&#34;</span>,
+            <span style="color:#e6db74">&#34;fields&#34;</span> : <span style="color:#f92672">{</span>
+              <span style="color:#e6db74">&#34;keyword&#34;</span> : <span style="color:#f92672">{</span>
+                <span style="color:#e6db74">&#34;type&#34;</span> : <span style="color:#e6db74">&#34;keyword&#34;</span>,
+                <span style="color:#e6db74">&#34;ignore_above&#34;</span> : <span style="color:#ae81ff">256</span>
+              <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+          <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="搜索所有文档">搜索所有文档</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl <span style="color:#e6db74">&#39;http://localhost:9200/blog/_search?pretty&#39;</span>
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;took&#34;</span> : 4,
+  <span style="color:#e6db74">&#34;timed_out&#34;</span> : false,
+  <span style="color:#e6db74">&#34;_shards&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;total&#34;</span> : 5,
+    <span style="color:#e6db74">&#34;successful&#34;</span> : 5,
+    <span style="color:#e6db74">&#34;skipped&#34;</span> : 0,
+    <span style="color:#e6db74">&#34;failed&#34;</span> : <span style="color:#ae81ff">0</span>
+  <span style="color:#f92672">}</span>,
+  <span style="color:#e6db74">&#34;hits&#34;</span> : <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;total&#34;</span> : 1,
+    <span style="color:#e6db74">&#34;max_score&#34;</span> : 1.0,
+    <span style="color:#e6db74">&#34;hits&#34;</span> : <span style="color:#f92672">[</span>
+      <span style="color:#f92672">{</span>
+        <span style="color:#e6db74">&#34;_index&#34;</span> : <span style="color:#e6db74">&#34;blog&#34;</span>,
+        <span style="color:#e6db74">&#34;_type&#34;</span> : <span style="color:#e6db74">&#34;article&#34;</span>,
+        <span style="color:#e6db74">&#34;_id&#34;</span> : <span style="color:#e6db74">&#34;AWkaOUZRo273Me3hdpnS&#34;</span>,
+        <span style="color:#e6db74">&#34;_score&#34;</span> : 1.0,
+        <span style="color:#e6db74">&#34;_source&#34;</span> : <span style="color:#f92672">{</span>
+          <span style="color:#e6db74">&#34;title&#34;</span> : <span style="color:#e6db74">&#34;新增文档&#34;</span>,
+          <span style="color:#e6db74">&#34;content&#34;</span> : <span style="color:#e6db74">&#34;内容2&#34;</span>
+        <span style="color:#f92672">}</span>
+      <span style="color:#f92672">}</span>
+    <span style="color:#f92672">]</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="删除索引">删除索引</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ curl -X DELETE <span style="color:#e6db74">&#39;http://localhost:9200/blog&#39;</span>
+</code></pre></div><h2 id="read-more">Read More</h2>
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/docs.html">Document APIs</a> 官方文档</li>
+</ul>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/Basic/quick-start-crud.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#状态查询">状态查询</a>
+      <ul>
+        <li><a href="#基本信息">基本信息</a></li>
+        <li><a href="#文档个数">文档个数</a></li>
+        <li><a href="#集群节点状态">集群节点状态</a></li>
+      </ul>
+    </li>
+    <li><a href="#文档管理-crud">文档管理 CRUD</a>
+      <ul>
+        <li><a href="#创建或更新">创建或更新</a></li>
+        <li><a href="#新增文档">新增文档</a></li>
+        <li><a href="#查询指定文档">查询指定文档</a></li>
+        <li><a href="#更新文档字段">更新文档字段</a></li>
+        <li><a href="#获取索引映射管理">获取索引映射管理</a></li>
+        <li><a href="#搜索所有文档">搜索所有文档</a></li>
+        <li><a href="#删除索引">删除索引</a></li>
+      </ul>
+    </li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

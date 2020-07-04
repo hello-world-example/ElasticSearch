@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Elasticsearch Metrics"><meta property="og:title" content="" />
+<meta property="og:description" content="elasticsearch-metrics   官方文档：https://grafana.com/grafana/dashboards/878 Github: https://github.com/trevorndodds/elasticsearch-metrics   安装监控脚本 # 下载 Python 文件 $ wget https://raw.githubusercontent.com/trevorndodds/elasticsearch-metrics/master/Grafana/elasticsearch2elastic.py # 编辑 # 修改 ES_METRICS_CLUSTER_URL &amp; ES_METRICS_MONITORING_CLUSTER_URL 为 ES 地址 $ vim elasticsearch2elastic.py # 启动脚本（建议后台运行） $ python elasticsearch2elastic.py 导入 Grafana Dashboard 创建 DataSource  Name：ElasticSearch-Metrics Type：ElasticSearch HTTP  URL：http://x.x.x.x:9200   Elasticsearch details  Pattern：Daily Index name：[elasticsearch_metrics-]YYYY.MM.DD Time field name： @timestamp    导入模板  模板文件：https://grafana.com/api/dashboards/878/revisions/8/download 选择数据源：ElasticSearch-Metrics  大致原理  每 60s（ ES_METRICS_INTERVAL 配置） 调用 ES 原生 API 获取监控数据  /_cluster/health /_cluster/stats /_cat/nodes?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Metrics/elasticsearch-metrics/" />
+
+<title>Elasticsearch Metrics | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li>
+<p><strong>入门</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Basic/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/Basic/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/Basic/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/Basic/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/Basic/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/Basic/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/Basic/profile/">Profile API</a></li>
+</ul>
+</li>
+<li>
+<p><strong>优化</strong></p>
+<ul>
+<li>..</li>
+</ul>
+</li>
+<li>
+<p><strong>监控</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Metrics/EsRally/">_Esrally 压测工具</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/elasticsearch-metrics/"class=active>elasticsearch-metrics 监控</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/_cat/">_cat  接口</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Elasticsearch Metrics</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装监控脚本">安装监控脚本</a></li>
+    <li><a href="#导入-grafana-dashboard">导入 Grafana Dashboard</a>
+      <ul>
+        <li><a href="#创建-datasource">创建 DataSource</a></li>
+        <li><a href="#导入模板">导入模板</a></li>
+      </ul>
+    </li>
+    <li><a href="#大致原理">大致原理</a></li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="elasticsearch-metrics">elasticsearch-metrics</h1>
+<blockquote>
+<ul>
+<li>官方文档：https://grafana.com/grafana/dashboards/878</li>
+<li>Github: <a href="https://github.com/trevorndodds/elasticsearch-metrics">https://github.com/trevorndodds/elasticsearch-metrics</a></li>
+</ul>
+</blockquote>
+<h2 id="安装监控脚本">安装监控脚本</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 下载 Python 文件</span>
+$ wget https://raw.githubusercontent.com/trevorndodds/elasticsearch-metrics/master/Grafana/elasticsearch2elastic.py
+
+<span style="color:#75715e"># 编辑</span>
+<span style="color:#75715e"># 修改 ES_METRICS_CLUSTER_URL &amp; ES_METRICS_MONITORING_CLUSTER_URL 为 ES 地址</span>
+$ vim elasticsearch2elastic.py
+
+<span style="color:#75715e"># 启动脚本（建议后台运行）</span>
+$ python elasticsearch2elastic.py
+</code></pre></div><h2 id="导入-grafana-dashboard">导入 Grafana Dashboard</h2>
+<h3 id="创建-datasource">创建 DataSource</h3>
+<ul>
+<li>Name：<code>ElasticSearch-Metrics</code></li>
+<li>Type：<code>ElasticSearch</code></li>
+<li>HTTP
+<ul>
+<li>URL：<code>http://x.x.x.x:9200</code></li>
+</ul>
+</li>
+<li>Elasticsearch details
+<ul>
+<li>Pattern：<code>Daily</code></li>
+<li>Index name：<code>[elasticsearch_metrics-]YYYY.MM.DD</code></li>
+<li>Time field name： <code>@timestamp</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="导入模板">导入模板</h3>
+<ul>
+<li>模板文件：https://grafana.com/api/dashboards/878/revisions/8/download</li>
+<li>选择数据源：<code>ElasticSearch-Metrics</code></li>
+</ul>
+<h2 id="大致原理">大致原理</h2>
+<ul>
+<li>每 60s（ <code>ES_METRICS_INTERVAL</code> 配置） 调用 ES 原生 API 获取监控数据
+<ul>
+<li>/_cluster/health</li>
+<li>/_cluster/stats</li>
+<li>/_cat/nodes?v&amp;h=n</li>
+<li>/_stats</li>
+</ul>
+</li>
+<li>获取到的数据 重新写入 ES，索引文件名 <code>ES_METRICS_INDEX_NAME</code> 默认 <code>elasticsearch_metrics</code>，每天滚动一个索引</li>
+</ul>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/Metrics/elasticsearch-metrics.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装监控脚本">安装监控脚本</a></li>
+    <li><a href="#导入-grafana-dashboard">导入 Grafana Dashboard</a>
+      <ul>
+        <li><a href="#创建-datasource">创建 DataSource</a></li>
+        <li><a href="#导入模板">导入模板</a></li>
+      </ul>
+    </li>
+    <li><a href="#大致原理">大致原理</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ik Plugin"><meta property="og:title" content="" />
+<meta property="og:description" content="IK 中文分词 安装 # https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip $ Version=$(curl -s http://localhost:9200 | grep number | awk -F &#39;&#34;&#39; &#39;{print $4}&#39;) $ ./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v${Version}/elasticsearch-analysis-ik-${Version}.zip -&gt; Downloading https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v5.6.12/elasticsearch-analysis-ik-5.6.12.zip [===========================&gt; ] 56% 安装后启动报错问题 报错内容 [2019-02-26T07:19:11,994][INFO ][o.e.n.Node ] [KpRS12p] started [2019-02-26T07:19:12,421][INFO ][o.w.a.d.Monitor ] try load config from /usr/share/elasticsearch/config/analysis-ik/IKAnalyzer.cfg.xml [2019-02-26T07:19:12,425][INFO ][o.w.a.d.Monitor ] try load config from /usr/share/elasticsearch/plugins/analysis-ik/config/IKAnalyzer.cfg.xml [2019-02-26T07:19:12,426][ERROR][o.w.a.d.Monitor ] ik-analyzer java.io.FileNotFoundException: /usr/share/elasticsearch/config/analysis-ik/IKAnalyzer.cfg.xml (No such file or directory) at java.io.FileInputStream.open0(Native Method) ~[?:1.8.0_181] at java.io.FileInputStream.open(FileInputStream.java:195) ~[?:1.8.0_181] at java.io.FileInputStream.&lt;init&gt;(FileInputStream.java:138) ~[?" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Basic/ik-plugin/" />
+
+<title>Ik Plugin | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li>
+<p><strong>入门</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Basic/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/Basic/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/Basic/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/Basic/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/Basic/ik-plugin/"class=active>IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/Basic/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/Basic/profile/">Profile API</a></li>
+</ul>
+</li>
+<li>
+<p><strong>优化</strong></p>
+<ul>
+<li>..</li>
+</ul>
+</li>
+<li>
+<p><strong>监控</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Metrics/EsRally/">_Esrally 压测工具</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/_cat/">_cat  接口</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Ik Plugin</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#安装后启动报错问题">安装后启动报错问题</a>
+      <ul>
+        <li><a href="#报错内容">报错内容</a></li>
+        <li><a href="#docker-环境解决方式">Docker 环境解决方式</a></li>
+        <li><a href="#解压方式安装插件">解压方式安装插件</a></li>
+      </ul>
+    </li>
+    <li><a href="#新增文档测试">新增文档测试</a></li>
+    <li><a href="#ik_max_word-和-ik_smart-的区别">ik_max_word 和 ik_smart 的区别</a></li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="ik-中文分词">IK 中文分词</h1>
+<h2 id="安装">安装</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip</span>
+
+$ Version<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>curl -s http://localhost:9200 | grep number | awk  -F <span style="color:#e6db74">&#39;&#34;&#39;</span> <span style="color:#e6db74">&#39;{print $4}&#39;</span><span style="color:#66d9ef">)</span>
+
+$ ./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v<span style="color:#e6db74">${</span>Version<span style="color:#e6db74">}</span>/elasticsearch-analysis-ik-<span style="color:#e6db74">${</span>Version<span style="color:#e6db74">}</span>.zip
+
+-&gt; Downloading https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v5.6.12/elasticsearch-analysis-ik-5.6.12.zip
+<span style="color:#f92672">[===========================</span>&gt;                     <span style="color:#f92672">]</span> 56%
+</code></pre></div><h2 id="安装后启动报错问题">安装后启动报错问题</h2>
+<h3 id="报错内容">报错内容</h3>
+<pre><code>[2019-02-26T07:19:11,994][INFO ][o.e.n.Node               ] [KpRS12p] started
+[2019-02-26T07:19:12,421][INFO ][o.w.a.d.Monitor          ] try load config from /usr/share/elasticsearch/config/analysis-ik/IKAnalyzer.cfg.xml
+[2019-02-26T07:19:12,425][INFO ][o.w.a.d.Monitor          ] try load config from /usr/share/elasticsearch/plugins/analysis-ik/config/IKAnalyzer.cfg.xml
+[2019-02-26T07:19:12,426][ERROR][o.w.a.d.Monitor          ] ik-analyzer
+java.io.FileNotFoundException: /usr/share/elasticsearch/config/analysis-ik/IKAnalyzer.cfg.xml (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:1.8.0_181]
+	at java.io.FileInputStream.open(FileInputStream.java:195) ~[?:1.8.0_181]
+	at java.io.FileInputStream.&lt;init&gt;(FileInputStream.java:138) ~[?:1.8.0_181]
+	at org.wltea.analyzer.dic.Dictionary.&lt;init&gt;(Dictionary.java:110) ~[?:?]
+...
+
+[2019-02-26T07:19:12,454][ERROR][o.w.a.d.Monitor          ] /usr/share/elasticsearch/plugins/analysis-ik/config/main.dic (No such file or directory)
+java.io.FileNotFoundException: /usr/share/elasticsearch/plugins/analysis-ik/config/main.dic (No such file or directory)
+	at java.io.FileInputStream.open0(Native Method) ~[?:1.8.0_181]
+	at java.io.FileInputStream.open(FileInputStream.java:195) ~[?:1.8.0_181]
+	at java.io.FileInputStream.&lt;init&gt;(FileInputStream.java:138) ~[?:1.8.0_181]
+...
+</code></pre><blockquote>
+<ul>
+<li><a href="https://github.com/medcl/elasticsearch-analysis-ik/issues/467">IK 1.10.6 安装后无法找到 IKAnalyzer.cfg.xml 以及 main.dic</a></li>
+<li><a href="https://github.com/medcl/elasticsearch-analysis-ik/pull/192">move config file to &lt;path.conf&gt;/analysis-ik</a></li>
+<li><a href="https://github.com/medcl/elasticsearch-analysis-ik/pull/197">Also load config from /etc/elasticsearch/analysis-ik</a></li>
+</ul>
+</blockquote>
+<h3 id="docker-环境解决方式">Docker 环境解决方式</h3>
+<p>使用 <code>./bin/elasticsearch-plugin install</code> 安装后，IK 配置文件会背移动到 <code>/etc/elasticsearch/analysis-ik</code> 路径下，把配置文件移动到 报错的目录即可</p>
+<ul>
+<li><code>mkdir /usr/share/elasticsearch/plugins/analysis-ik/config/</code></li>
+<li><code>cd /usr/share/elasticsearch/plugins/analysis-ik/config/</code></li>
+<li><code>mv /etc/elasticsearch/analysis-ik/* ./</code></li>
+</ul>
+<h3 id="解压方式安装插件">解压方式安装插件</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 进到插件目录</span>
+$ cd /usr/share/elasticsearch/plugins/
+
+<span style="color:#75715e"># 下载指定版本的插件压缩包</span>
+$ wget https://github.com/medcl/elasticsearch-analysis-
+ik/releases/download/v5.6.12/elasticsearch-analysis-ik-5.6.12.zip
+
+<span style="color:#75715e"># 解压</span>
+$ unzip elasticsearch-analysis-ik-5.6.12.zip
+
+<span style="color:#75715e"># 重命名</span>
+$ mv elasticsearch analysis-ik
+
+<span style="color:#75715e"># 删除压缩包</span>
+$ rm -rf elasticsearch-analysis-ik-5.6.12.zip
+
+<span style="color:#75715e"># 查看已安装的插件</span>
+$ ./bin/elasticsearch-plugin list
+analysis-ik
+</code></pre></div><h2 id="新增文档测试">新增文档测试</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 删除索引</span>
+DELETE /index_ik_test
+
+<span style="color:#75715e"># 创建索引信息</span> 
+PUT /index_ik_test
+
+<span style="color:#75715e"># 查看索引信息</span>
+GET /index_ik_test
+
+<span style="color:#75715e"># 设置映射关系</span>
+PUT /index_ik_test/fulltext/_mapping
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;properties&#34;</span>: <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;title&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;text&#34;</span>,
+      <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;ik_max_word&#34;</span>
+    <span style="color:#f92672">}</span>,
+    <span style="color:#e6db74">&#34;content&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;type&#34;</span>: <span style="color:#e6db74">&#34;text&#34;</span>,
+      <span style="color:#e6db74">&#34;analyzer&#34;</span>: <span style="color:#e6db74">&#34;ik_smart&#34;</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+
+<span style="color:#75715e"># 获取映射</span>
+GET /index_ik_test/_mapping
+
+<span style="color:#75715e"># 获取设置</span>
+GET /index_ik_test/_settings
+
+<span style="color:#75715e"># 新增文档</span>
+POST /index_ik_test/fulltext/1
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;中华人民共和国国歌&#34;</span>,
+  <span style="color:#e6db74">&#34;content&#34;</span>: <span style="color:#e6db74">&#34;中华人民共和国国歌&#34;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e"># 查看所有文档</span>
+GET /index_ik_test/_search
+
+<span style="color:#75715e"># 可以搜到</span>
+POST /index_ik_test/fulltext/_search
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;query&#34;</span>: <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;match&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;中华&#34;</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e"># 搜索不到</span>
+POST /index_ik_test/fulltext/_search
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;query&#34;</span>: <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;match&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;content&#34;</span>: <span style="color:#e6db74">&#34;中华&#34;</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e"># 可以搜到(高亮显示)</span>
+POST /index_ik_test/fulltext/_search
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;query&#34;</span>: <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;match&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;content&#34;</span>: <span style="color:#e6db74">&#34;国歌&#34;</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>,
+  <span style="color:#e6db74">&#34;highlight&#34;</span>: <span style="color:#f92672">{</span>
+    <span style="color:#e6db74">&#34;pre_tags&#34;</span>: <span style="color:#f92672">[</span>
+      <span style="color:#e6db74">&#34;&lt;red&gt;&#34;</span>
+    <span style="color:#f92672">]</span>,
+    <span style="color:#e6db74">&#34;post_tags&#34;</span>: <span style="color:#f92672">[</span>
+      <span style="color:#e6db74">&#34;&lt;/red&gt;&#34;</span>
+    <span style="color:#f92672">]</span>,
+    <span style="color:#e6db74">&#34;fields&#34;</span>: <span style="color:#f92672">{</span>
+      <span style="color:#e6db74">&#34;content&#34;</span>: <span style="color:#f92672">{}</span>
+    <span style="color:#f92672">}</span>
+  <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><h2 id="ik_max_word-和-ik_smart-的区别">ik_max_word 和 ik_smart 的区别</h2>
+<p><code>ik_max_word</code>: 会将文本做最细粒度的拆分，会穷尽各种可能的组合，比如会将 <strong>“中华人民共和国国歌”</strong> 拆分为</p>
+<ul>
+<li>中华人民共和国</li>
+<li>中华人民</li>
+<li>中华</li>
+<li>华人</li>
+<li>人民共和国</li>
+<li>人民</li>
+<li>共和国</li>
+<li>共和</li>
+<li>国</li>
+<li>国歌</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">GET /_analyze
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;analyzer&#34;</span> : <span style="color:#e6db74">&#34;ik_max_word&#34;</span>,
+  <span style="color:#e6db74">&#34;text&#34;</span> : <span style="color:#e6db74">&#34;中华人民共和国国歌&#34;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><code>ik_smart</code>: 会做最粗粒度的拆分，比如会将  <strong>“中华人民共和国国歌”</strong> 拆分为</p>
+<ul>
+<li>中华人民共和国</li>
+<li>国歌</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">GET /_analyze
+<span style="color:#f92672">{</span>
+  <span style="color:#e6db74">&#34;analyzer&#34;</span> : <span style="color:#e6db74">&#34;ik_smart&#34;</span>,
+  <span style="color:#e6db74">&#34;text&#34;</span> : <span style="color:#e6db74">&#34;中华人民共和国国歌&#34;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="read-more">Read More</h2>
+<ul>
+<li>
+<p><a href="https://github.com/wks/ik-analyzer">wks/ik-analyzer</a></p>
+</li>
+<li>
+<p><a href="https://github.com/medcl/elasticsearch-analysis-ik">IK Analysis for Elasticsearch</a></p>
+</li>
+<li>
+<p><a href="https://www.cnblogs.com/xing901022/p/5910139.html">如何在Elasticsearch中安装中文分词器(IK+pinyin)</a></p>
+</li>
+<li>
+<p><a href="http://blog.51yip.com/server/1915.html">elasticsearch mapping 添加 编辑 删除字段</a></p>
+</li>
+<li></li>
+<li>
+<p>官方文档</p>
+<ul>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html">Create Index</a></li>
+<li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-put-mapping.html">Put Mapping</a></li>
+</ul>
+</li>
+</ul>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/Basic/ik-plugin.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装">安装</a></li>
+    <li><a href="#安装后启动报错问题">安装后启动报错问题</a>
+      <ul>
+        <li><a href="#报错内容">报错内容</a></li>
+        <li><a href="#docker-环境解决方式">Docker 环境解决方式</a></li>
+        <li><a href="#解压方式安装插件">解压方式安装插件</a></li>
+      </ul>
+    </li>
+    <li><a href="#新增文档测试">新增文档测试</a></li>
+    <li><a href="#ik_max_word-和-ik_smart-的区别">ik_max_word 和 ik_smart 的区别</a></li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

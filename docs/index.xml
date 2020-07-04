@@ -15,24 +15,27 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://hello-world-example.github.io/ElasticSearch/_sidebar/</guid>
-      <description> 入门  版本历史 基础概念 快速开始 快速认识 RESTful API Java Client 插件机制 IK 中文分词 插件 导入导出 Profile API   监控  elasticsearch-metrics 监控    </description>
+      <description>  入门
+ 版本历史 基础概念 快速开始 快速认识 RESTful API Java Client 插件机制 IK 中文分词 插件 导入导出 Profile API    优化
+ ..    监控
+ _Esrally 压测工具 elasticsearch-metrics 监控 _cat 接口    </description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/analyzer/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/analyzer/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/analyzer/</guid>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/analyzer/</guid>
       <description>Analyzer 分析器 Read More  Elasticsearch - 指定分析器  </description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/core-concept/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/core-concept/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/core-concept/</guid>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/core-concept/</guid>
       <description>基础概念 Lucene 词汇表  文档 document ：索引和搜索时使用的主要数据载体，包含一个或多个存有数据的字段 字段 field ：文档的一部分，包含名称和值两部分 词 term： 一个搜索单元，表示文本中的一个词 标记 token ：在字段文本中出现的词，由这个词的文本、开始和结束偏移量以及类 型组成 倒排索引 inverted index 索引分为多个的段segment。一个段写入磁盘后就不能再更新，被删除文档的信息存储在一个单独的文件中，多个段可以通过段合并segments merge合并在一起，合并时不再需要的信息将被删除 分析器 由一个分词器 tokenizer和零个或多个标记过滤器 token filter组成，也可以有零个或多个字符映射器character mapper 评分scoring  ElasticSearch 核心概念 数据架构   **索引（index）**是Elasticsearch对逻辑数据的逻辑存储，可以把索引看成关系型数据库的表
   存储在Elasticsearch中的主要实体叫文档（document），用关系型数据库来类比的话，一个文档相当于数据库表中的一行记录
   文档由多个字段组成，每个字段可能多次出现在一个文档里，这样的字段叫多值字段（multivalued）。与关系型数据库不同，文档不需要有固定的结构，每个文档可以有不同的字段
@@ -47,29 +50,29 @@
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/dump/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/dump/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/dump/</guid>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/dump/</guid>
       <description>导入导出 elasticsearch-dump  详见官方文档： https://github.com/taskrabbit/elasticsearch-dump
  安装 $ mkdir /opt/websuite/elasticdump $ cd /opt/websuite/elasticdump # 本地安装 $ npm install elasticdump # 查看帮助 $ ./node_modules/elasticdump/bin/elasticdump --help 常用命令 # # 导出 # $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=http://172.16.2.164:9200/dev_carmodel \  --output=/tmp/es/dev_carmodel_mapping.json \  --type=mapping $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=http://172.16.2.164:9200/dev_carmodel \  --output=/tmp/es/dev_carmodel_data.json \  --type=data # # 导入 # $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=/tmp/es/dev_carmodel_data.json \  --output=http://172.16.2.164:9200/dev_carmodel_dump \  --type=data # # 复制数据 # $ /opt/websuite/elasticdump/node_modules/elasticdump/bin/elasticdump \  --input=http://172.</description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/ik-plugin/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/ik-plugin/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/ik-plugin/</guid>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/ik-plugin/</guid>
       <description>IK 中文分词 安装 # https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.3.0/elasticsearch-analysis-ik-6.3.0.zip $ Version=$(curl -s http://localhost:9200 | grep number | awk -F &amp;#39;&amp;#34;&amp;#39; &amp;#39;{print $4}&amp;#39;) $ ./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v${Version}/elasticsearch-analysis-ik-${Version}.zip -&amp;gt; Downloading https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v5.6.12/elasticsearch-analysis-ik-5.6.12.zip [===========================&amp;gt; ] 56% 安装后启动报错问题 报错内容 [2019-02-26T07:19:11,994][INFO ][o.e.n.Node ] [KpRS12p] started [2019-02-26T07:19:12,421][INFO ][o.w.a.d.Monitor ] try load config from /usr/share/elasticsearch/config/analysis-ik/IKAnalyzer.cfg.xml [2019-02-26T07:19:12,425][INFO ][o.w.a.d.Monitor ] try load config from /usr/share/elasticsearch/plugins/analysis-ik/config/IKAnalyzer.cfg.xml [2019-02-26T07:19:12,426][ERROR][o.w.a.d.Monitor ] ik-analyzer java.io.FileNotFoundException: /usr/share/elasticsearch/config/analysis-ik/IKAnalyzer.cfg.xml (No such file or directory) at java.io.FileInputStream.open0(Native Method) ~[?:1.8.0_181] at java.io.FileInputStream.open(FileInputStream.java:195) ~[?:1.8.0_181] at java.io.FileInputStream.&amp;lt;init&amp;gt;(FileInputStream.java:138) ~[?</description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/java-client/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/java-client/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/java-client/</guid>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/java-client/</guid>
       <description>Java Client 简介   elasticsearch-rest-client 使用 9200 HTTP 协议进行通讯，上手简单，是低阶 API
  org.apache.httpcomponents:httpasyncclient org.apache.httpcomponents:httpcore-nio org.apache.httpcomponents:httpclient org.apache.httpcomponents:httpcore commons-codec:commons-codec commons-logging:commons-logging    elasticsearch-rest-high-level-client 使用 9200 HTTP 协议进行通讯，对常用操作进行语义化封装，相对低阶API 更加友好，但是想要的功能并不一定封装全，任何未实现的功能可通过 低阶API进行操作
  org.elasticsearch.client:elasticsearch-rest-client org.elasticsearch:elasticsearch org.elasticsearch.plugin:parent-join-client org.elasticsearch.plugin:aggs-matrix-stats-client    transport 使用 9300 TCP 协议端口进行通讯，性能好
@@ -84,29 +87,20 @@
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/Metrics/elasticsearch-metrics/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/plugins/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/Metrics/elasticsearch-metrics/</guid>
-      <description>elasticsearch-metrics   官方文档：https://grafana.com/grafana/dashboards/878 Github: https://github.com/trevorndodds/elasticsearch-metrics   安装监控脚本 # 下载 Python 文件 $ wget https://raw.githubusercontent.com/trevorndodds/elasticsearch-metrics/master/Grafana/elasticsearch2elastic.py # 编辑 # 修改 ES_METRICS_CLUSTER_URL &amp;amp; ES_METRICS_MONITORING_CLUSTER_URL 为 ES 地址 $ vim elasticsearch2elastic.py # 启动脚本（建议后台运行） $ python elasticsearch2elastic.py 导入 Grafana Dashboard 创建 DataSource  Name：ElasticSearch-Metrics Type：ElasticSearch HTTP  URL：http://x.x.x.x:9200   Elasticsearch details  Pattern：Daily Index name：[elasticsearch_metrics-]YYYY.MM.DD Time field name： @timestamp    导入模板  模板文件：https://grafana.com/api/dashboards/878/revisions/8/download 选择数据源：ElasticSearch-Metrics  大致原理  每 60s（ ES_METRICS_INTERVAL 配置） 调用 ES 原生 API 获取监控数据  /_cluster/health /_cluster/stats /_cat/nodes?</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/plugins/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/plugins/</guid>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/plugins/</guid>
       <description>插件机制 ElasticSearch 插件是一个 jar 文件，也可能包含脚本和配置文件，并且必须安装在群集中的每个节点上，安装后，必须重新启动每个节点才能看到插件。
 elasticsearch-plugin $ ./bin/elasticsearch-plugin -h A tool for managing installed elasticsearch plugins Commands -------- list - Lists installed elasticsearch plugins install - Install a plugin remove - removes a plugin from Elasticsearch Non-option arguments: command Option Description ------ ----------- -h, --help show help -s, --silent show minimal output -v, --verbose show verbose output elasticsearch-plugin 脚本内容 cat ./bin/elasticsearch-plugin ... declare -a args=(&amp;#34;$@&amp;#34;) path_props=(-Des.path.home=&amp;#34;$ES_HOME&amp;#34;) if [ -e &amp;#34;$CONF_DIR&amp;#34; ]; then path_props=(&amp;#34;${path_props[@]}&amp;#34; -Des.</description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/profile/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/profile/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/profile/</guid>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/profile/</guid>
       <description>Profile API { ..., &amp;#34;profile&amp;#34; : true, ... } shards.id # ID 格式 [nodeID][indexName][shardID]  GET /_nodes/stats 查看节点信息
  shards.searches shards.searches.query  type 它向我们显示了哪种类型的查询被触发 description 该字段显示启动查询的lucene方法 time lucene 执行此查询所用的时间 breakdown 有关查询的更详细的细节，主要与 lucene 参数有关。 children – 具有多个关键字的查询被拆分成相应术语的布尔查询，每个查询都作为单独的查询来执行。每个子查询的详细信息将填充到Profile API输出的子段中。在上面的章节中，可以看到第一个子元素查询是&amp;quot;levi&amp;rdquo;，下面给出查询时间和其他breakdown参数等详细信息。同样，对于第二个关键字，有一个名为&amp;quot;goals&amp;quot;的子元素具有与其兄弟相同的信息。从查询中的子段中，我们可以得到关于哪个搜索项在总体搜索中造成最大延迟的信息。  shards.searches.rewrite_time 将查询重写成一个或多个组合查询的时间被称为“重写时间”，以纳秒为单位
 shards.searches.collector 在 Lucene 中，收集器是负责 收集原始结果，收集组合结果，执行结果排序等的过程。例如，在上面的执行的查询中，当查询语句中给出size:0时，使用的收集器是&amp;quot;totalHitCountCollector&amp;rdquo;。这只返回搜索结果的数量（search_count），不返回文档。此外，收集者所用的时间也一起给出了。
@@ -115,58 +109,61 @@ shards.aggregations </description>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/quick-start-crud/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/quick-start-crud/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/quick-start-crud/</guid>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/quick-start-crud/</guid>
       <description>RESTful 增删改查 状态查询 基本信息 $ curl -X GET &amp;#39;http://localhost:9200/&amp;#39; { &amp;#34;name&amp;#34; : &amp;#34;KpRS12p&amp;#34;, &amp;#34;cluster_name&amp;#34; : &amp;#34;elasticsearch&amp;#34;, &amp;#34;cluster_uuid&amp;#34; : &amp;#34;PU5vpob2Q1GyVV-P9o0OwQ&amp;#34;, &amp;#34;version&amp;#34; : { &amp;#34;number&amp;#34; : &amp;#34;5.6.12&amp;#34;, &amp;#34;build_hash&amp;#34; : &amp;#34;cfe3d9f&amp;#34;, &amp;#34;build_date&amp;#34; : &amp;#34;2018-09-10T20:12:43.732Z&amp;#34;, &amp;#34;build_snapshot&amp;#34; : false, &amp;#34;lucene_version&amp;#34; : &amp;#34;6.6.1&amp;#34; }, &amp;#34;tagline&amp;#34; : &amp;#34;You Know, for Search&amp;#34; } 文档个数 $ curl -X GET &amp;#39;http://localhost:9200/_count?pretty&amp;#39; { &amp;#34;count&amp;#34; : 12, &amp;#34;_shards&amp;#34; : { &amp;#34;total&amp;#34; : 6, &amp;#34;successful&amp;#34; : 6, &amp;#34;skipped&amp;#34; : 0, &amp;#34;failed&amp;#34; : 0 } } 集群节点状态 $ curl -X GET &amp;#39;http://localhost:9200/_cluster/state/nodes/?</description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/quick-start/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/quick-start/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/quick-start/</guid>
-      <description>快速开始 Docker 方式安装 安装 # 拉取镜像 $ docker pull elasticsearch # 启动 $ docker run -d -p 9200:9200 -p 9300:9300 -e &amp;#34;discovery.type=single-node&amp;#34; elasticsearch # 从 elasticsearch 官方镜像仓库拉取 [速度比较慢] # $ docker pull docker.elastic.co/elasticsearch/elasticsearch:6.6.1 # $ docker run -p 9200:9200 -p 9300:9300 -e &amp;#34;discovery.type=single-node&amp;#34; \ # docker.elastic.co/elasticsearch/elasticsearch:6.6.1   官方文档：https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html Docker 镜像仓库：https://www.docker.elastic.co/ docker search elasticsearch 搜索镜像   查看基本信息 $ curl http://localhost:9200/ { &amp;#34;name&amp;#34; : &amp;#34;KpRS12p&amp;#34;, &amp;#34;cluster_name&amp;#34; : &amp;#34;elasticsearch&amp;#34;, &amp;#34;cluster_uuid&amp;#34; : &amp;#34;PU5vpob2Q1GyVV-P9o0OwQ&amp;#34;, &amp;#34;version&amp;#34; : { &amp;#34;number&amp;#34; : &amp;#34;5.</description>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/quick-start/</guid>
+      <description>快速开始 Docker 方式安装 安装 # 拉取镜像 $ docker pull elasticsearch # 启动 $ docker run -d -p 9200:9200 -p 9300:9300 \  -e TZ=&amp;#34;Asia/Shanghai&amp;#34; \  -e discovery.type=&amp;#34;single-node&amp;#34; \  --name es elasticsearch # 从 elasticsearch 官方镜像仓库拉取 [速度比较慢] # $ docker pull docker.elastic.co/elasticsearch/elasticsearch:6.6.1 # $ docker run -p 9200:9200 -p 9300:9300 -e &amp;#34;discovery.type=single-node&amp;#34; \ # docker.elastic.co/elasticsearch/elasticsearch:6.6.1   官方文档：https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html Docker 镜像仓库：https://www.docker.elastic.co/ docker search elasticsearch 搜索镜像   查看基本信息 $ curl http://localhost:9200/ { &amp;#34;name&amp;#34; : &amp;#34;KpRS12p&amp;#34;, &amp;#34;cluster_name&amp;#34; : &amp;#34;elasticsearch&amp;#34;, &amp;#34;cluster_uuid&amp;#34; : &amp;#34;PU5vpob2Q1GyVV-P9o0OwQ&amp;#34;, &amp;#34;version&amp;#34; : { &amp;#34;number&amp;#34; : &amp;#34;5.</description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/version-history/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Basic/version-history/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/version-history/</guid>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Basic/version-history/</guid>
       <description>版本历史  详见官方文档：https://www.elastic.co/cn/downloads/past-releases#elasticsearch
  版本时间概述  0.X  2010-02-08 v0.4.0 2014-03-25 v0.90.13 laster   1.X  2014-02-12 v1.0.0 2015-11-15 v1.7.3 2016-11-15 v1.7.16 laster   2.X  2015-11-28 v2.0.0 2016-08-31 v2.4.0 2017-07-25 v2.4.6 laster    没有 2~3 版本，直接升级到 5  5.X  2016-10-26 v5.0.0 2017-10-11 v5.6.3 ~ using 2018-06-13 v5.6.10 ~ lucene v6.6.1 ~ using 2018-09-18 v5.6.12 ~ lucene v6.6.1 2019-02-19 v5.6.15 laster   6.X  2017-11-14 v6.</description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/Kibana/README/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/_cat/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Kibana/README/</guid>
-      <description>asd</description>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/_cat/</guid>
+      <description>_cat 接口 _cat 接口的输出格式适合 终端、人眼阅读，不建议应用程序使用
+使用方式简单：GET http://localhost:9200/_cat
+参数    参数 描述 示例     help 帮助，查看所有的列和描述 /_cat/count?help   v 输出列名    h 指定列表名，多个用 , 分割 ?v&amp;amp;h=* 输出所有列   s 排序，多列用 , 分割 ?s=store.size:desc   bytes 指定单位：b 、k 、m 、g ?v&amp;amp;bytes=b   format text、json、yaml、smile 、cbor    pretty 格式化输出     =^.^=    Type 子接口       Segment /_cat/segments     Segment /_cat/segments/{index}           Doc /_cat/count 文档数    Doc /_cat/count/{index} 文档数          索引 /_cat/indices 索引信息    索引 /_cat/indices/{index} 索引信息    索引 /_cat/aliases 别名    索引 /_cat/aliases/{alias} 别名          分片 /_cat/shards 分片信息    分片 /_cat/shards/{index} 分片信息    分片 /_cat/allocation 分片数、磁盘占用    分片 /_cat/recovery 分片移动恢复情况    分片 /_cat/recovery/{index} 分片移动恢复情况          集群 /_cat/master     集群 ❤ /_cat/nodes ❤性能指标❤ 内存、CPU、负载    集群 /_cat/nodeattrs 节点属性    集群 /_cat/health ❤集群健康❤          线程 /_cat/tasks     线程 /_cat/pending_tasks 挂起等待的任务    线程 /_cat/thread_pool 线程池情况    线程 /_cat/thread_pool/{thread_pools} 线程池情况          Info /_cat/plugins 插件信息    Info /_cat/templates 模板名    Info /_cat/fielddata     Info /_cat/fielddata/{fields}           快照 /_cat/repositories     快照 /_cat/snapshots/{repository}      Read More  cat APIs Elasticsearch Cat 命令  </description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/Logstash/install/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/elasticsearch-metrics/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Logstash/install/</guid>
-      <description>安装 Logstash  选择版本：https://www.elastic.co/cn/downloads/past-releases#logstash
- 下载 $ wget https://artifacts.elastic.co/downloads/logstash/logstash-5.6.12.tar.gz </description>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/elasticsearch-metrics/</guid>
+      <description>elasticsearch-metrics   官方文档：https://grafana.com/grafana/dashboards/878 Github: https://github.com/trevorndodds/elasticsearch-metrics   安装监控脚本 # 下载 Python 文件 $ wget https://raw.githubusercontent.com/trevorndodds/elasticsearch-metrics/master/Grafana/elasticsearch2elastic.py # 编辑 # 修改 ES_METRICS_CLUSTER_URL &amp;amp; ES_METRICS_MONITORING_CLUSTER_URL 为 ES 地址 $ vim elasticsearch2elastic.py # 启动脚本（建议后台运行） $ python elasticsearch2elastic.py 导入 Grafana Dashboard 创建 DataSource  Name：ElasticSearch-Metrics Type：ElasticSearch HTTP  URL：http://x.x.x.x:9200   Elasticsearch details  Pattern：Daily Index name：[elasticsearch_metrics-]YYYY.MM.DD Time field name： @timestamp    导入模板  模板文件：https://grafana.com/api/dashboards/878/revisions/8/download 选择数据源：ElasticSearch-Metrics  大致原理  每 60s（ ES_METRICS_INTERVAL 配置） 调用 ES 原生 API 获取监控数据  /_cluster/health /_cluster/stats /_cat/nodes?</description>
     </item>
     
     <item>
       <title></title>
-      <link>https://hello-world-example.github.io/ElasticSearch/docs/Logstash/README/</link>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/EsRally/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Logstash/README/</guid>
-      <description>Logstash   官网   </description>
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/EsRally/</guid>
+      <description>esrally 压测工具 esrally 是 Elastic 官方开源的一款基于 python3 的针对 ElasticSearch 的压测工具。
+官方对 ES 的压测结果  https://elasticsearch-benchmarks.elastic.co/
+  环境  CPU: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz RAM: 32 GB SSD: Crucial MX200 OS: Linux Kernel version 4.8.0-53 JVM: Oracle JDK 1.8.0_131-b11   集群  一台 esrally 一台 ElasticSearch   写入性能  10w+ docs/s   搜索性能  term : 23ms match-all : 123ms range : 543ms scroll : 1,111ms aggs : 3,000ms    esrally 简介 概念  race : 比赛，代表依次基准测 car : 代表 ES 集群 及其 配置 track : rally track 意为 拉力赛道，是针对不同场景的测试数据，压测过程中默认是自动下载的 challenge : 挑战，是基准测试测场景，如：多个客户端每次写多少数据等   总结：在汽车拉力赛(Rally)中，汽车(car)会在赛道(track)开过各种弯道(challenge)完成一次比赛(race)，通过比赛成绩能看出车(手)的能力；通过锦标赛(tournament)可以看出哪个车(手)的水平比较高。</description>
     </item>
     
     <item>
@@ -175,7 +172,7 @@ shards.aggregations </description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://hello-world-example.github.io/ElasticSearch/TODO/</guid>
-      <description>TODO Lucene 查询语法  _exist_ _Miss_  重点监控指标 </description>
+      <description>TODO Lucene 查询语法  _exist_ _Miss_  重点监控指标  /_cluster/health /_cluster/stats /_cat/nodes?v&amp;amp;h=n /_stats  </description>
     </item>
     
   </channel>

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Es Rally"><meta property="og:title" content="" />
+<meta property="og:description" content="esrally 压测工具 esrally 是 Elastic 官方开源的一款基于 python3 的针对 ElasticSearch 的压测工具。
+官方对 ES 的压测结果  https://elasticsearch-benchmarks.elastic.co/
+  环境  CPU: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz RAM: 32 GB SSD: Crucial MX200 OS: Linux Kernel version 4.8.0-53 JVM: Oracle JDK 1.8.0_131-b11   集群  一台 esrally 一台 ElasticSearch   写入性能  10w&#43; docs/s   搜索性能  term : 23ms match-all : 123ms range : 543ms scroll : 1,111ms aggs : 3,000ms    esrally 简介 概念  race : 比赛，代表依次基准测 car : 代表 ES 集群 及其 配置 track : rally track 意为 拉力赛道，是针对不同场景的测试数据，压测过程中默认是自动下载的 challenge : 挑战，是基准测试测场景，如：多个客户端每次写多少数据等   总结：在汽车拉力赛(Rally)中，汽车(car)会在赛道(track)开过各种弯道(challenge)完成一次比赛(race)，通过比赛成绩能看出车(手)的能力；通过锦标赛(tournament)可以看出哪个车(手)的水平比较高。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Metrics/EsRally/" />
+
+<title>Es Rally | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.86147912f668c403222a50332cde085e18d4996ed906ac78d9739522067f9a29.css" integrity="sha256-hhR5EvZoxAMiKlAzLN4IXhjUmW7ZBqx42XOVIgZ/mik=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li>
+<p><strong>入门</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Basic/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/Basic/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/Basic/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/Basic/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/Basic/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/Basic/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/Basic/profile/">Profile API</a></li>
+</ul>
+</li>
+<li>
+<p><strong>优化</strong></p>
+<ul>
+<li>..</li>
+</ul>
+</li>
+<li>
+<p><strong>监控</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Metrics/EsRally/"class=active>_Esrally 压测工具</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/_cat/">_cat  接口</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Es Rally</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#官方对-es-的压测结果">官方对 ES 的压测结果</a></li>
+    <li><a href="#esrally-简介">esrally 简介</a>
+      <ul>
+        <li><a href="#概念">概念</a></li>
+        <li><a href="#参数">参数</a></li>
+      </ul>
+    </li>
+    <li><a href="#docker-方式运行">Docker 方式运行</a></li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="esrally-压测工具">esrally 压测工具</h1>
+<p><code>esrally</code> 是 Elastic 官方开源的一款基于 <code>python3</code> 的针对 ElasticSearch 的压测工具。</p>
+<h2 id="官方对-es-的压测结果">官方对 ES 的压测结果</h2>
+<blockquote>
+<p><a href="https://elasticsearch-benchmarks.elastic.co/">https://elasticsearch-benchmarks.elastic.co/</a></p>
+</blockquote>
+<ul>
+<li><strong>环境</strong>
+<ul>
+<li>CPU: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz</li>
+<li>RAM: 32 GB</li>
+<li>SSD: Crucial MX200</li>
+<li>OS: Linux Kernel version 4.8.0-53</li>
+<li>JVM: Oracle JDK 1.8.0_131-b11</li>
+</ul>
+</li>
+<li><strong>集群</strong>
+<ul>
+<li>一台 esrally</li>
+<li>一台 ElasticSearch</li>
+</ul>
+</li>
+<li><strong>写入性能</strong>
+<ul>
+<li><code>10w+</code> docs/s</li>
+</ul>
+</li>
+<li><strong>搜索性能</strong>
+<ul>
+<li><strong>term</strong> : <code>23ms</code></li>
+<li><strong>match-all</strong> : <code>123ms</code></li>
+<li><strong>range</strong> : <code>543ms</code></li>
+<li><strong>scroll</strong> : <code>1,111ms</code></li>
+<li><strong>aggs</strong> : <code>3,000ms</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="esrally-简介">esrally 简介</h2>
+<h3 id="概念">概念</h3>
+<ul>
+<li><code>race</code> : 比赛，代表依次基准测</li>
+<li><code>car</code> : 代表 ES 集群 及其 配置</li>
+<li><code>track</code> : <strong>rally track</strong> 意为 <strong>拉力赛道</strong>，是针对不同场景的测试数据，压测过程中默认是自动下载的</li>
+<li><code>challenge</code> : 挑战，是基准测试测场景，如：多个客户端每次写多少数据等</li>
+</ul>
+<blockquote>
+<p><strong>总结</strong>：在汽车拉力赛(<code>Rally</code>)中，汽车(<code>car</code>)会在赛道(<code>track</code>)开过各种弯道(<code>challenge</code>)完成一次比赛(<code>race</code>)，通过比赛成绩能看出车(手)的能力；通过锦标赛(<code>tournament</code>)可以看出哪个车(手)的水平比较高。</p>
+<p>—— <a href="https://blog.lyremelody.org/2018/01/23/esrally/">https://blog.lyremelody.org/2018/01/23/esrally/</a></p>
+</blockquote>
+<h3 id="参数">参数</h3>
+<h4 id="--offline">&ndash;offline</h4>
+<ul>
+<li>指定 <code>--offline</code> 不会自动下载 <code>track</code> 数据</li>
+</ul>
+<h4 id="--pipeline">&ndash;pipeline</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ docker run elastic/rally list pipelines --offline
+</code></pre></div><table>
+<thead>
+<tr>
+<th align="center"><code>--pipeline</code></th>
+<th>简介</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong><code>benchmark-only</code></strong></td>
+<td>使用自己配置的集群，通过 <code>--target-hosts=x.x.x:9200,</code> 指定集群地址</td>
+</tr>
+<tr>
+<td align="center"><code>from-distribution</code></td>
+<td>自动从官网下载 <code>--distribution-version=x.x.x</code> 指定的版本进行压测</td>
+</tr>
+<tr>
+<td align="center"><code>from-sources-complete</code></td>
+<td>【内部基准测试】自动 git 拉取 源码构建 ES</td>
+</tr>
+<tr>
+<td align="center"><code>from-sources-skip-build</code></td>
+<td>【内部基准测试】包已近构建好的情况</td>
+</tr>
+</tbody>
+</table>
+<h2 id="docker-方式运行">Docker 方式运行</h2>
+<blockquote>
+<ul>
+<li><a href="https://esrally.readthedocs.io/en/latest/docker.html">Running Rally with Docker</a>
+<ul>
+<li>不支持集群</li>
+<li>只支持 <code>--pipeline=benchmark-only</code></li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ docker pull elastic/rally
+
+docker run -it -v <span style="color:#66d9ef">$(</span>PWD<span style="color:#66d9ef">)</span>:/root/track rockybean/esrally esrally race <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span> --track-path<span style="color:#f92672">=</span>/root/track/logging <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span> --offline <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span> --pipeline<span style="color:#f92672">=</span>benchmark-only <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span> --target-hosts<span style="color:#f92672">=</span>192.168.1.105:9200
+
+</code></pre></div><h2 id="read-more">Read More</h2>
+<ul>
+<li><strong>官方资源</strong>
+<ul>
+<li>Github： <a href="https://github.com/elastic/rally">elastic / rally</a></li>
+<li>Doc：<a href="http://esrally.readthedocs.io/en/latest/quickstart.html">Quick Start</a></li>
+<li>Blog ： <a href="https://www.elastic.co/cn/blog/announcing-rally-benchmarking-for-elasticsearch">Rally: Our benchmarking tool for Elasticsearch</a></li>
+</ul>
+</li>
+<li><a href="https://segmentfault.com/a/1190000011174694">Elasticsearch 压测方案之 esrally 简介</a></li>
+</ul>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/Metrics/EsRally.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#官方对-es-的压测结果">官方对 ES 的压测结果</a></li>
+    <li><a href="#esrally-简介">esrally 简介</a>
+      <ul>
+        <li><a href="#概念">概念</a></li>
+        <li><a href="#参数">参数</a></li>
+      </ul>
+    </li>
+    <li><a href="#docker-方式运行">Docker 方式运行</a></li>
+    <li><a href="#read-more">Read More</a></li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
