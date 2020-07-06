@@ -14,13 +14,15 @@ headless: true
   
 * **优化**
   
-  * ..
+  * [配置]({{< relref "/docs/Optimization/Better-Config.md" >}})
+  * [写入]({{< relref "/docs/Optimization/Better-Write.md" >}})
+  * [搜索]({{< relref "/docs/Optimization/Better-Search.md" >}})  
   
 * **监控**
   
   * [_Esrally 压测工具]({{< relref "/docs/Metrics/Esrally.md" >}})  
   * [elasticsearch-metrics 监控]({{< relref "/docs/Metrics/elasticsearch-metrics.md" >}})  
-  * [_cat  接口]({{< relref "/docs/Metrics/API_cat.md" >}})
+  * [/_cat  接口]({{< relref "/docs/Metrics/API_cat.md" >}})
   
     
   
