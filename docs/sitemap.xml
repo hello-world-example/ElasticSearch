@@ -4,63 +4,71 @@
   
   <url>
     <loc>https://hello-world-example.github.io/ElasticSearch/_sidebar/</loc>
-    <lastmod>2020-03-24T16:21:17+08:00</lastmod>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/analyzer/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/analyzer/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/core-concept/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/core-concept/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/dump/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/dump/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/ik-plugin/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/ik-plugin/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/java-client/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/java-client/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/Metrics/elasticsearch-metrics/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/plugins/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/plugins/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/profile/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/profile/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/quick-start-crud/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/quick-start-crud/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/quick-start/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/quick-start/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Basic/version-history/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/ElasticSearch/version-history/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/API_cat/</loc>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Kibana/README/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/elasticsearch-metrics/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Logstash/install/</loc>
-  </url>
-  
-  <url>
-    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Logstash/README/</loc>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/EsRally/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
@@ -69,12 +77,21 @@
   </url>
   
   <url>
+    <loc>https://hello-world-example.github.io/ElasticSearch/categories/</loc>
+  </url>
+  
+  <url>
     <loc>https://hello-world-example.github.io/ElasticSearch/docs/</loc>
+    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://hello-world-example.github.io/ElasticSearch/</loc>
-    <lastmod>2020-03-24T16:21:17+08:00</lastmod>
+    <lastmod>2020-03-24T16:39:41+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hello-world-example.github.io/ElasticSearch/tags/</loc>
   </url>
   
 </urlset>
