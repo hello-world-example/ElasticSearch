@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Better Search"><meta property="og:title" content="" />
+<meta property="og:description" content="搜索性能优化 硬件/系统  为系统 cache 预留 至少一半的可用物理内存  搜索依赖对系统的 cache 的命中   禁用 swap  swap 分区是从磁盘空间划分而来   更快的硬件  写入性能对 CPU 更敏感 搜索性能更在意 IO 能力  搜索请求有更多的所及访问 使用 SSD 比 旋转介质 还有质的飞跃 如果搜索类型计算比较多，考虑使用更快的 CPU      查看 swap # 或 free -m $ swapon -s Filename Type Size Used Priority /dev/dm-1 partition 2097144 0 -1 关闭 swap $ swapoff /dev/dm-1 索引/建模  合理建模  嵌套 会使查询慢 几倍 ？？？ 父子 会使查询慢 百倍 ？？？   预索引数据  搜索时需要 范围查询 range 的字段，在生成索引时进行计算，生成新的字段，变为 terms 查询   字段映射  keyword 比 integer 和 long 更好   为只读索引执行 forceMerge、Shrink  基于日期进行轮训的索引，旧数据一般不会更新   预热全局序号（Global Ordinals）？？？ 【6." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Search/" />
+<meta property="article:modified_time" content="2020-07-06T13:31:08+08:00" />
+<title>Better Search | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.27c9780f144e30b05778b1a8e10cc4a7416874a42deb26a6ddaddad5f3d13e39.css" integrity="sha256-J8l4DxROMLBXeLGo4QzEp0FodKQt6yam3a3a1fPRPjk=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li>
+<p><strong>入门</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Basic/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/Basic/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/Basic/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/Basic/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/Basic/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/Basic/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/Basic/profile/">Profile API</a></li>
+</ul>
+</li>
+<li>
+<p><strong>优化</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Optimization/Better-Config/">配置</a></li>
+<li><a href="/ElasticSearch/docs/Optimization/Better-Write/">写入</a></li>
+<li><a href="/ElasticSearch/docs/Optimization/Better-Search/"class=active>搜索</a></li>
+</ul>
+</li>
+<li>
+<p><strong>监控</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Metrics/EsRally/">_Esrally 压测工具</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/API_cat/">/_cat  接口</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Better Search</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#搜索性能优化">搜索性能优化</a>
+      <ul>
+        <li><a href="#硬件系统">硬件/系统</a>
+          <ul>
+            <li><a href="#查看-swap">查看 swap</a></li>
+            <li><a href="#关闭-swap">关闭 swap</a></li>
+          </ul>
+        </li>
+        <li><a href="#索引建模">索引/建模</a></li>
+        <li><a href="#搜索技巧">搜索技巧</a></li>
+        <li><a href="#聚合技巧">聚合技巧</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="搜索性能优化">搜索性能优化</h1>
+<h2 id="硬件系统">硬件/系统</h2>
+<ul>
+<li>为系统 cache 预留 <strong>至少一半的可用物理内存</strong>
+<ul>
+<li>搜索依赖对系统的 cache 的命中</li>
+</ul>
+</li>
+<li>禁用 swap
+<ul>
+<li>swap 分区是从磁盘空间划分而来</li>
+</ul>
+</li>
+<li>更快的硬件
+<ul>
+<li>写入性能对 CPU 更敏感</li>
+<li><strong>搜索性能更在意 IO 能力</strong>
+<ul>
+<li>搜索请求有更多的所及访问</li>
+<li><strong>使用 SSD 比 旋转介质 还有质的飞跃</strong></li>
+<li>如果搜索类型计算比较多，考虑使用更快的 CPU</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看-swap">查看 swap</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 或 free -m</span>
+$ swapon -s
+Filename    Type           Size    Used Priority
+/dev/dm-1        partition <span style="color:#ae81ff">2097144</span> <span style="color:#ae81ff">0</span>    -1
+</code></pre></div><h3 id="关闭-swap">关闭 swap</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">$ swapoff /dev/dm-1
+</code></pre></div><h2 id="索引建模">索引/建模</h2>
+<ul>
+<li>合理建模
+<ul>
+<li>嵌套 会使查询慢 几倍 ？？？</li>
+<li>父子 会使查询慢 百倍 ？？？</li>
+</ul>
+</li>
+<li>预索引数据
+<ul>
+<li>搜索时需要 范围查询 <code>range</code> 的字段，在生成索引时进行计算，生成新的字段，变为 <code>terms</code> 查询</li>
+</ul>
+</li>
+<li>字段映射
+<ul>
+<li><code>keyword</code> 比 <code>integer</code> 和 <code>long</code> 更好</li>
+</ul>
+</li>
+<li>为只读索引执行 forceMerge、Shrink
+<ul>
+<li>基于日期进行轮训的索引，旧数据一般不会更新</li>
+</ul>
+</li>
+<li>预热全局序号（Global Ordinals）？？？</li>
+<li>【6.1+】开启 ARS（自适应副本选择）
+<ul>
+<li>ES 搜索存在长尾效应，即 一个延迟高的节点 会影响 整个请求的耗时</li>
+<li>ARS 更根据分片副本的响应情况，只能的把请求路由的性能更高的节点</li>
+<li>开启方法？：</li>
+</ul>
+</li>
+</ul>
+<h2 id="搜索技巧">搜索技巧</h2>
+<ul>
+<li>避免使用脚本</li>
+<li><strong>有效使用查询缓存</strong>
+<ul>
+<li><strong>时间力度粗化</strong>，如：精确到分钟、固定时间 等，每次查询的时间返回都不一样，会导致缓存利用率降低</li>
+<li><strong>细化数据分类</strong>： 大部门和缓存的部分 + 少量不可缓存的部分， 如 ( time &lt; 一小时前 OR time &gt;= 最近一小时 )</li>
+</ul>
+</li>
+<li>execution hint: map  ？？？</li>
+<li>限制搜索的分片数
+<ul>
+<li>action.search.shard_count ？？？</li>
+</ul>
+</li>
+</ul>
+<h2 id="聚合技巧">聚合技巧</h2>
+<ul>
+<li>batched_reduce_size ？？？</li>
+<li>近似聚合</li>
+<li>权衡 深度优先 和 广度优先</li>
+</ul>
+<h2 id="read-more">Read More</h2>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/commit/fab50d6b993d05ea05b38dfeb64874165c4e19b9" title='Last modified by kaibin.yang | Jul 6, 2020' target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Jul 6, 2020</span>
+    </a>
+  </div>
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/Optimization/Better-Search.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#搜索性能优化">搜索性能优化</a>
+      <ul>
+        <li><a href="#硬件系统">硬件/系统</a>
+          <ul>
+            <li><a href="#查看-swap">查看 swap</a></li>
+            <li><a href="#关闭-swap">关闭 swap</a></li>
+          </ul>
+        </li>
+        <li><a href="#索引建模">索引/建模</a></li>
+        <li><a href="#搜索技巧">搜索技巧</a></li>
+        <li><a href="#聚合技巧">聚合技巧</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

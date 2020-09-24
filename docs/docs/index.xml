@@ -154,5 +154,32 @@ shards.aggregations </description>
   环境  CPU: Intel(R) Core(TM) i7-6700 CPU @ 3.40GHz RAM: 32 GB SSD: Crucial MX200 OS: Linux Kernel version 4.8.0-53 JVM: Oracle JDK 1.8.0_131-b11   集群  一台 esrally 一台 ElasticSearch   写入性能  10w+ docs/s   搜索性能  term : 23ms match-all : 123ms range : 543ms scroll : 1,111ms aggs : 3,000ms    esrally 简介 概念  race : 比赛，代表依次基准测 car : 代表 ES 集群 及其 配置 track : rally track 意为 拉力赛道，是针对不同场景的测试数据，压测过程中默认是自动下载的 challenge : 挑战，是基准测试测场景，如：多个客户端每次写多少数据等   总结：在汽车拉力赛(Rally)中，汽车(car)会在赛道(track)开过各种弯道(challenge)完成一次比赛(race)，通过比赛成绩能看出车(手)的能力；通过锦标赛(tournament)可以看出哪个车(手)的水平比较高。</description>
     </item>
     
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Config/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Config/</guid>
+      <description>配置示例 索引模板配置 { /* 模板优先级，数字越大，优先级越高，优先级高的模板覆盖优先级低的模板 */ &amp;#34;order&amp;#34;:0, /* 匹配的索引，如果多个模板匹配一个索引，优先级高的模板覆盖优先级低的模板 */ &amp;#34;template&amp;#34;:&amp;#34;demo-*&amp;#34;, &amp;#34;settings&amp;#34;:{ &amp;#34;index&amp;#34;:{ /* 分片数 */ &amp;#34;number_of_shards&amp;#34;:&amp;#34;3&amp;#34;, /* 副本数 */ &amp;#34;number_of_replicas&amp;#34;:&amp;#34;1&amp;#34;, /* 【可见性】refresh 周期，默认 1s，即数据写入 1s 后可见 */ &amp;#34;refresh_interval&amp;#34;:&amp;#34;60s&amp;#34;, /* 自动生成 doc id 以提高写入效率【7.0废弃】 */ &amp;#34;optimize_auto_generated_id&amp;#34;:&amp;#34;true&amp;#34;, /* 节点脱离集群，主节点延迟重分配分片，以减少重新平衡分片带来的资源浪费，默认 1m */ &amp;#34;unassigned.node_left.delayed_timeout&amp;#34;:&amp;#34;1d&amp;#34;, /* flush 策略 */ &amp;#34;translog&amp;#34;:{ /* 【可靠性】异步刷新，存在数据丢失的情况，默认 request， */ &amp;#34;durability&amp;#34;:&amp;#34;async&amp;#34;, /* 【可靠性】异步刷新间隔 */ &amp;#34;sync_interval&amp;#34;:&amp;#34;30s&amp;#34;, /* 允许 translog 在 flush 前存放更大的 Segment，以减少 flush 的频率，减少磁盘IO */ &amp;#34;flush_threshold_size&amp;#34;:&amp;#34;1000mb&amp;#34; }, &amp;#34;merge&amp;#34;:{ &amp;#34;policy&amp;#34;:{ /* 默认 5G */ &amp;#34;max_merged_segment&amp;#34;:&amp;#34;2gb&amp;#34;, /* 分段的数量，数值越小，最终 segment 越少，但是需要 merge 的操作会更多，默认 10 */ &amp;#34;segments_per_tier&amp;#34;:&amp;#34;24&amp;#34;, /* 默认一次合并的分段数 */ &amp;#34;max_merge_at_once&amp;#34;: &amp;#34;10&amp;#34; }, &amp;#34;scheduler&amp;#34;:{ /* Merge 线程数，默认 max(1, min(4, cpu/2))， 机械硬盘建议1，SSD 可调高 */ &amp;#34;max_thread_count&amp;#34;:&amp;#34;1&amp;#34; } } } }, &amp;#34;mappings&amp;#34;:{ &amp;#34;doc&amp;#34;:{ &amp;#34;_all&amp;#34;:{ /* _all 字段包含所有字段分析后的信息，作用是在搜索时不指定特定的字段 */ /* ES6 之后，默认禁用，可明显降低 CPU 和 IO 压力 */ &amp;#34;enabled&amp;#34;:false }, &amp;#34;_source&amp;#34; : { /* 用于存储 doc 原始数据，对于不需要存储的字段可禁用 */ &amp;#34;enabled&amp;#34; : false, /* 包含指定的字段 */ &amp;#34;includes&amp;#34;:[&amp;#34;field1&amp;#34;,&amp;#34;field2&amp;#34;], /* 排除指定的字段 */ &amp;#34;excludes&amp;#34;:[&amp;#34;field1&amp;#34;,&amp;#34;field2&amp;#34;] } } } } elasticsearch.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Search/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Search/</guid>
+      <description>搜索性能优化 硬件/系统  为系统 cache 预留 至少一半的可用物理内存  搜索依赖对系统的 cache 的命中   禁用 swap  swap 分区是从磁盘空间划分而来   更快的硬件  写入性能对 CPU 更敏感 搜索性能更在意 IO 能力  搜索请求有更多的所及访问 使用 SSD 比 旋转介质 还有质的飞跃 如果搜索类型计算比较多，考虑使用更快的 CPU      查看 swap # 或 free -m $ swapon -s Filename Type Size Used Priority /dev/dm-1 partition 2097144 0 -1 关闭 swap $ swapoff /dev/dm-1 索引/建模  合理建模  嵌套 会使查询慢 几倍 ？？？ 父子 会使查询慢 百倍 ？？？   预索引数据  搜索时需要 范围查询 range 的字段，在生成索引时进行计算，生成新的字段，变为 terms 查询   字段映射  keyword 比 integer 和 long 更好   为只读索引执行 forceMerge、Shrink  基于日期进行轮训的索引，旧数据一般不会更新   预热全局序号（Global Ordinals）？？？ 【6.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Write/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Write/</guid>
+      <description>写入性能优化 整体思路  牺牲可靠性 和 搜索实时性 增加 refresh 间隔，减小搜索实时性 增加 flush 间隔，降低 segment merge 频率 增加 bulk 请求  时效性 refresh_interval  index.refresh_interval  默认 1s，即数据写入 1s 后可被搜索到    translog flush  默认 每个请求都 flush 相关配置  index.translog.durability  request async  index.translog.sync_interval: 默认 5s   index.translog.flush_threshold_size: 默认 512m      段合并  ES 2.0 开始，merge 行为不再由 ES 控制，而是由 Lucene 控制 index.merge.scheduler.max_thread_count  默认： max(1, min(4, cpu/2)) 机械硬盘建议：1   index.</description>
+    </item>
+    
   </channel>
 </rss>

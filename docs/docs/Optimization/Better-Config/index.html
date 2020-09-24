@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Better Config"><meta property="og:title" content="" />
+<meta property="og:description" content="配置示例 索引模板配置 { /* 模板优先级，数字越大，优先级越高，优先级高的模板覆盖优先级低的模板 */ &#34;order&#34;:0, /* 匹配的索引，如果多个模板匹配一个索引，优先级高的模板覆盖优先级低的模板 */ &#34;template&#34;:&#34;demo-*&#34;, &#34;settings&#34;:{ &#34;index&#34;:{ /* 分片数 */ &#34;number_of_shards&#34;:&#34;3&#34;, /* 副本数 */ &#34;number_of_replicas&#34;:&#34;1&#34;, /* 【可见性】refresh 周期，默认 1s，即数据写入 1s 后可见 */ &#34;refresh_interval&#34;:&#34;60s&#34;, /* 自动生成 doc id 以提高写入效率【7.0废弃】 */ &#34;optimize_auto_generated_id&#34;:&#34;true&#34;, /* 节点脱离集群，主节点延迟重分配分片，以减少重新平衡分片带来的资源浪费，默认 1m */ &#34;unassigned.node_left.delayed_timeout&#34;:&#34;1d&#34;, /* flush 策略 */ &#34;translog&#34;:{ /* 【可靠性】异步刷新，存在数据丢失的情况，默认 request， */ &#34;durability&#34;:&#34;async&#34;, /* 【可靠性】异步刷新间隔 */ &#34;sync_interval&#34;:&#34;30s&#34;, /* 允许 translog 在 flush 前存放更大的 Segment，以减少 flush 的频率，减少磁盘IO */ &#34;flush_threshold_size&#34;:&#34;1000mb&#34; }, &#34;merge&#34;:{ &#34;policy&#34;:{ /* 默认 5G */ &#34;max_merged_segment&#34;:&#34;2gb&#34;, /* 分段的数量，数值越小，最终 segment 越少，但是需要 merge 的操作会更多，默认 10 */ &#34;segments_per_tier&#34;:&#34;24&#34;, /* 默认一次合并的分段数 */ &#34;max_merge_at_once&#34;: &#34;10&#34; }, &#34;scheduler&#34;:{ /* Merge 线程数，默认 max(1, min(4, cpu/2))， 机械硬盘建议1，SSD 可调高 */ &#34;max_thread_count&#34;:&#34;1&#34; } } } }, &#34;mappings&#34;:{ &#34;doc&#34;:{ &#34;_all&#34;:{ /* _all 字段包含所有字段分析后的信息，作用是在搜索时不指定特定的字段 */ /* ES6 之后，默认禁用，可明显降低 CPU 和 IO 压力 */ &#34;enabled&#34;:false }, &#34;_source&#34; : { /* 用于存储 doc 原始数据，对于不需要存储的字段可禁用 */ &#34;enabled&#34; : false, /* 包含指定的字段 */ &#34;includes&#34;:[&#34;field1&#34;,&#34;field2&#34;], /* 排除指定的字段 */ &#34;excludes&#34;:[&#34;field1&#34;,&#34;field2&#34;] } } } } elasticsearch." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Config/" />
+<meta property="article:modified_time" content="2020-07-06T13:31:08+08:00" />
+<title>Better Config | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.27c9780f144e30b05778b1a8e10cc4a7416874a42deb26a6ddaddad5f3d13e39.css" integrity="sha256-J8l4DxROMLBXeLGo4QzEp0FodKQt6yam3a3a1fPRPjk=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li>
+<p><strong>入门</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Basic/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/Basic/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/Basic/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/Basic/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/Basic/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/Basic/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/Basic/profile/">Profile API</a></li>
+</ul>
+</li>
+<li>
+<p><strong>优化</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Optimization/Better-Config/"class=active>配置</a></li>
+<li><a href="/ElasticSearch/docs/Optimization/Better-Write/">写入</a></li>
+<li><a href="/ElasticSearch/docs/Optimization/Better-Search/">搜索</a></li>
+</ul>
+</li>
+<li>
+<p><strong>监控</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Metrics/EsRally/">_Esrally 压测工具</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/API_cat/">/_cat  接口</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Better Config</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#配置示例">配置示例</a>
+      <ul>
+        <li><a href="#索引模板配置">索引模板配置</a></li>
+        <li><a href="#elasticsearchyml">elasticsearch.yml</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="配置示例">配置示例</h1>
+<h2 id="索引模板配置">索引模板配置</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+  <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">模板优先级，数字越大，优先级越高，优先级高的模板覆盖优先级低的模板</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+  <span style="color:#f92672">&#34;order&#34;</span>:<span style="color:#ae81ff">0</span>,
+  <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">匹配的索引，如果多个模板匹配一个索引，优先级高的模板覆盖优先级低的模板</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+  <span style="color:#f92672">&#34;template&#34;</span>:<span style="color:#e6db74">&#34;demo-*&#34;</span>,
+  <span style="color:#f92672">&#34;settings&#34;</span>:{
+    <span style="color:#f92672">&#34;index&#34;</span>:{
+      <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">分片数</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+      <span style="color:#f92672">&#34;number_of_shards&#34;</span>:<span style="color:#e6db74">&#34;3&#34;</span>,
+      <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">副本数</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+      <span style="color:#f92672">&#34;number_of_replicas&#34;</span>:<span style="color:#e6db74">&#34;1&#34;</span>,
+      <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">【可见性】refresh</span> <span style="color:#960050;background-color:#1e0010">周期，默认</span> <span style="color:#960050;background-color:#1e0010">1s，即数据写入</span> <span style="color:#960050;background-color:#1e0010">1s</span> <span style="color:#960050;background-color:#1e0010">后可见</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+      <span style="color:#f92672">&#34;refresh_interval&#34;</span>:<span style="color:#e6db74">&#34;60s&#34;</span>,
+      <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">自动生成</span> <span style="color:#960050;background-color:#1e0010">doc</span> <span style="color:#960050;background-color:#1e0010">id</span> <span style="color:#960050;background-color:#1e0010">以提高写入效率【7.0废弃】</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+      <span style="color:#f92672">&#34;optimize_auto_generated_id&#34;</span>:<span style="color:#e6db74">&#34;true&#34;</span>,
+      <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">节点脱离集群，主节点延迟重分配分片，以减少重新平衡分片带来的资源浪费，默认</span> <span style="color:#960050;background-color:#1e0010">1m</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+      <span style="color:#f92672">&#34;unassigned.node_left.delayed_timeout&#34;</span>:<span style="color:#e6db74">&#34;1d&#34;</span>,
+      <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">flush</span> <span style="color:#960050;background-color:#1e0010">策略</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+      <span style="color:#f92672">&#34;translog&#34;</span>:{
+        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">【可靠性】异步刷新，存在数据丢失的情况，默认</span> <span style="color:#960050;background-color:#1e0010">request，</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+        <span style="color:#f92672">&#34;durability&#34;</span>:<span style="color:#e6db74">&#34;async&#34;</span>,
+        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">【可靠性】异步刷新间隔</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+        <span style="color:#f92672">&#34;sync_interval&#34;</span>:<span style="color:#e6db74">&#34;30s&#34;</span>,
+        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">允许</span> <span style="color:#960050;background-color:#1e0010">translog</span> <span style="color:#960050;background-color:#1e0010">在</span> <span style="color:#960050;background-color:#1e0010">flush</span> <span style="color:#960050;background-color:#1e0010">前存放更大的</span> <span style="color:#960050;background-color:#1e0010">Segment，以减少</span> <span style="color:#960050;background-color:#1e0010">flush</span> <span style="color:#960050;background-color:#1e0010">的频率，减少磁盘IO</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+        <span style="color:#f92672">&#34;flush_threshold_size&#34;</span>:<span style="color:#e6db74">&#34;1000mb&#34;</span>
+      },
+      <span style="color:#f92672">&#34;merge&#34;</span>:{
+        <span style="color:#f92672">&#34;policy&#34;</span>:{
+          <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">默认</span> <span style="color:#960050;background-color:#1e0010">5G</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+          <span style="color:#f92672">&#34;max_merged_segment&#34;</span>:<span style="color:#e6db74">&#34;2gb&#34;</span>,
+          <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">分段的数量，数值越小，最终</span> <span style="color:#960050;background-color:#1e0010">segment</span> <span style="color:#960050;background-color:#1e0010">越少，但是需要</span> <span style="color:#960050;background-color:#1e0010">merge</span> <span style="color:#960050;background-color:#1e0010">的操作会更多，默认</span> <span style="color:#960050;background-color:#1e0010">10</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+          <span style="color:#f92672">&#34;segments_per_tier&#34;</span>:<span style="color:#e6db74">&#34;24&#34;</span>,
+          <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">默认一次合并的分段数</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+          <span style="color:#f92672">&#34;max_merge_at_once&#34;</span>: <span style="color:#e6db74">&#34;10&#34;</span>
+        },
+        <span style="color:#f92672">&#34;scheduler&#34;</span>:{
+          <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">Merge</span> <span style="color:#960050;background-color:#1e0010">线程数，默认</span> <span style="color:#960050;background-color:#1e0010">max(1,</span> <span style="color:#960050;background-color:#1e0010">min(4,</span> <span style="color:#960050;background-color:#1e0010">cpu/2))，</span> <span style="color:#960050;background-color:#1e0010">机械硬盘建议1，SSD</span> <span style="color:#960050;background-color:#1e0010">可调高</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+          <span style="color:#f92672">&#34;max_thread_count&#34;</span>:<span style="color:#e6db74">&#34;1&#34;</span>
+        }
+      }
+    }
+  },
+  <span style="color:#f92672">&#34;mappings&#34;</span>:{
+    <span style="color:#f92672">&#34;doc&#34;</span>:{
+      <span style="color:#f92672">&#34;_all&#34;</span>:{
+        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">_all</span> <span style="color:#960050;background-color:#1e0010">字段包含所有字段分析后的信息，作用是在搜索时不指定特定的字段</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">ES6</span> <span style="color:#960050;background-color:#1e0010">之后，默认禁用，可明显降低</span> <span style="color:#960050;background-color:#1e0010">CPU</span> <span style="color:#960050;background-color:#1e0010">和</span> <span style="color:#960050;background-color:#1e0010">IO</span> <span style="color:#960050;background-color:#1e0010">压力</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+        <span style="color:#f92672">&#34;enabled&#34;</span>:<span style="color:#66d9ef">false</span>
+      },
+      <span style="color:#f92672">&#34;_source&#34;</span> : { 
+        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">用于存储</span> <span style="color:#960050;background-color:#1e0010">doc</span> <span style="color:#960050;background-color:#1e0010">原始数据，对于不需要存储的字段可禁用</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+        <span style="color:#f92672">&#34;enabled&#34;</span> : <span style="color:#66d9ef">false</span>,
+        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">包含指定的字段</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+        <span style="color:#f92672">&#34;includes&#34;</span>:[<span style="color:#e6db74">&#34;field1&#34;</span>,<span style="color:#e6db74">&#34;field2&#34;</span>],
+        <span style="color:#960050;background-color:#1e0010">/*</span> <span style="color:#960050;background-color:#1e0010">排除指定的字段</span> <span style="color:#960050;background-color:#1e0010">*/</span>
+        <span style="color:#f92672">&#34;excludes&#34;</span>:[<span style="color:#e6db74">&#34;field1&#34;</span>,<span style="color:#e6db74">&#34;field2&#34;</span>]
+      }
+    }
+  }
+}
+</code></pre></div><h2 id="elasticsearchyml">elasticsearch.yml</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#75715e"># 已经索引好的文档会先存放在内存缓存中，等待被写到到 Segment，默认 堆内存的10%</span>
+<span style="color:#66d9ef">indices.memory.index_buffer_size</span>: <span style="color:#ae81ff">30</span>%
+<span style="color:#75715e"># 默认 48m</span>
+<span style="color:#66d9ef">indices.memory.min_index_buffer_size</span>: 96mb
+</code></pre></div><h2 id="read-more">Read More</h2>
+<ul>
+<li>【老的方式】<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html">REST APIs</a> » <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices.html">Index APIs</a> » <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates-v1.html">Put index template API</a></li>
+<li>【7.8 组合模板】<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/rest-apis.html">REST APIs</a> » <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices.html">Index APIs</a> » <a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html">Index templates</a></li>
+<li>❤ <a href="https://www.jianshu.com/p/1f67e4436c37">Elasticsearch Index Template（索引模板)</a></li>
+</ul>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/commit/fab50d6b993d05ea05b38dfeb64874165c4e19b9" title='Last modified by kaibin.yang | Jul 6, 2020' target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Jul 6, 2020</span>
+    </a>
+  </div>
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/Optimization/Better-Config.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#配置示例">配置示例</a>
+      <ul>
+        <li><a href="#索引模板配置">索引模板配置</a></li>
+        <li><a href="#elasticsearchyml">elasticsearch.yml</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

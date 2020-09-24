@@ -4,7 +4,7 @@
   
   <url>
     <loc>https://hello-world-example.github.io/ElasticSearch/_sidebar/</loc>
-    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
+    <lastmod>2020-07-06T13:31:08+08:00</lastmod>
   </url>
   
   <url>
@@ -59,6 +59,7 @@
   
   <url>
     <loc>https://hello-world-example.github.io/ElasticSearch/docs/Metrics/API_cat/</loc>
+    <lastmod>2020-07-04T12:02:31+08:00</lastmod>
   </url>
   
   <url>
@@ -72,6 +73,21 @@
   </url>
   
   <url>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Config/</loc>
+    <lastmod>2020-07-06T13:31:08+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Search/</loc>
+    <lastmod>2020-07-06T13:31:08+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Write/</loc>
+    <lastmod>2020-07-06T13:31:08+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://hello-world-example.github.io/ElasticSearch/TODO/</loc>
     <priority>0</priority>
   </url>
@@ -82,7 +98,7 @@
   
   <url>
     <loc>https://hello-world-example.github.io/ElasticSearch/docs/</loc>
-    <lastmod>2020-07-04T11:44:01+08:00</lastmod>
+    <lastmod>2020-07-06T13:31:08+08:00</lastmod>
   </url>
   
   <url>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Better Write"><meta property="og:title" content="" />
+<meta property="og:description" content="写入性能优化 整体思路  牺牲可靠性 和 搜索实时性 增加 refresh 间隔，减小搜索实时性 增加 flush 间隔，降低 segment merge 频率 增加 bulk 请求  时效性 refresh_interval  index.refresh_interval  默认 1s，即数据写入 1s 后可被搜索到    translog flush  默认 每个请求都 flush 相关配置  index.translog.durability  request async  index.translog.sync_interval: 默认 5s   index.translog.flush_threshold_size: 默认 512m      段合并  ES 2.0 开始，merge 行为不再由 ES 控制，而是由 Lucene 控制 index.merge.scheduler.max_thread_count  默认： max(1, min(4, cpu/2)) 机械硬盘建议：1   index." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/ElasticSearch/docs/Optimization/Better-Write/" />
+<meta property="article:modified_time" content="2020-07-06T13:31:08+08:00" />
+<title>Better Write | ElasticSearch</title>
+<link rel="icon" href="/ElasticSearch/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/ElasticSearch/book.min.27c9780f144e30b05778b1a8e10cc4a7416874a42deb26a6ddaddad5f3d13e39.css" integrity="sha256-J8l4DxROMLBXeLGo4QzEp0FodKQt6yam3a3a1fPRPjk=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/ElasticSearch"><span>ElasticSearch</span>
+  </a>
+</h2>
+
+
+
+
+
+
+  <ul>
+<li>
+<p><strong>入门</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Basic/version-history/">版本历史</a></li>
+<li><a href="/ElasticSearch/docs/Basic/core-concept/">基础概念</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start/">快速开始</a></li>
+<li><a href="/ElasticSearch/docs/Basic/quick-start-crud/">快速认识 RESTful API</a></li>
+<li><a href="/ElasticSearch/docs/Basic/java-client/">Java Client</a></li>
+<li><a href="/ElasticSearch/docs/Basic/plugins/">插件机制</a></li>
+<li><a href="/ElasticSearch/docs/Basic/ik-plugin/">IK 中文分词 插件</a></li>
+<li><a href="/ElasticSearch/docs/Basic/dump/">导入导出</a></li>
+<li><a href="/ElasticSearch/docs/Basic/profile/">Profile API</a></li>
+</ul>
+</li>
+<li>
+<p><strong>优化</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Optimization/Better-Config/">配置</a></li>
+<li><a href="/ElasticSearch/docs/Optimization/Better-Write/"class=active>写入</a></li>
+<li><a href="/ElasticSearch/docs/Optimization/Better-Search/">搜索</a></li>
+</ul>
+</li>
+<li>
+<p><strong>监控</strong></p>
+<ul>
+<li><a href="/ElasticSearch/docs/Metrics/EsRally/">_Esrally 压测工具</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/elasticsearch-metrics/">elasticsearch-metrics 监控</a></li>
+<li><a href="/ElasticSearch/docs/Metrics/API_cat/">/_cat  接口</a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/ElasticSearch/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Better Write</strong>
+
+  <label for="toc-control">
+    <img src="/ElasticSearch/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#写入性能优化">写入性能优化</a>
+      <ul>
+        <li><a href="#整体思路">整体思路</a></li>
+        <li><a href="#时效性">时效性</a>
+          <ul>
+            <li><a href="#refresh_interval">refresh_interval</a></li>
+            <li><a href="#translog-flush">translog flush</a></li>
+          </ul>
+        </li>
+        <li><a href="#段合并">段合并</a></li>
+        <li><a href="#索引">索引</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+<article class="markdown"><h1 id="写入性能优化">写入性能优化</h1>
+<h2 id="整体思路">整体思路</h2>
+<ul>
+<li>牺牲可靠性 和 搜索实时性</li>
+<li>增加 refresh 间隔，减小搜索实时性</li>
+<li>增加 flush 间隔，降低 segment merge 频率</li>
+<li>增加 bulk 请求</li>
+</ul>
+<h2 id="时效性">时效性</h2>
+<h3 id="refresh_interval">refresh_interval</h3>
+<ul>
+<li>index.refresh_interval
+<ul>
+<li>默认 1s，即数据写入 1s 后可被搜索到</li>
+</ul>
+</li>
+</ul>
+<h3 id="translog-flush">translog flush</h3>
+<ul>
+<li>默认 每个请求都 <code>flush</code></li>
+<li>相关配置
+<ul>
+<li><code>index.translog.durability</code>
+<ul>
+<li><code>request</code></li>
+<li><code>async</code>
+<ul>
+<li>index.translog.sync_interval: 默认 5s</li>
+</ul>
+</li>
+<li>index.translog.flush_threshold_size: 默认 512m</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="段合并">段合并</h2>
+<ul>
+<li>ES 2.0 开始，merge 行为不再由 ES 控制，而是由 Lucene 控制</li>
+<li>index.merge.scheduler.max_thread_count
+<ul>
+<li>默认： max(1, min(4, cpu/2))</li>
+<li>机械硬盘建议：1</li>
+</ul>
+</li>
+<li>index.merge.policy.*
+<ul>
+<li>tiered</li>
+<li>log_byete_size</li>
+<li>log_doc</li>
+</ul>
+</li>
+</ul>
+<h2 id="索引">索引</h2>
+<ul>
+<li>自动生成 Doc ID
+<ul>
+<li>如果手动指定，ES 会尝试先读取原来的 doc，以判断是否需要更新</li>
+</ul>
+</li>
+<li>不需要建立索引的字段数据设置为： <code>no</code> 或者 <code>not_analyzed</code></li>
+<li>禁用 <code>_all</code> 字段
+<ul>
+<li>【ES 6】 默认禁用，<strong>可明显降低对 CPU 和 IO 的压力</strong></li>
+<li><code>_all</code> 字段包含所有字段分词后的关键字</li>
+<li>作用是在搜索时不指定特定的字段，从所有字段中检索</li>
+</ul>
+</li>
+<li>如果不需要评分，可禁用 <code>norms</code>
+<ul>
+<li>&ldquo;字段&rdquo; : {&ldquo;type&rdquo;:&ldquo;string&rdquo;, &ldquo;norms&rdquo;:{&ldquo;enabled&rdquo;}}</li>
+</ul>
+</li>
+</ul>
+<h2 id="read-more">Read More</h2>
+<ul>
+<li><a href="https://blog.csdn.net/jamesjxin/article/details/50512106">Elasticsearch写入性能优化</a></li>
+</ul>
+</article>
+ 
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+  <div>
+    
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/commit/fab50d6b993d05ea05b38dfeb64874165c4e19b9" title='Last modified by kaibin.yang | Jul 6, 2020' target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/calendar.svg" class="book-icon" alt="Calendar" />
+      <span>Jul 6, 2020</span>
+    </a>
+  </div>
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/ElasticSearch/edit/master/HuGo/content/docs/Optimization/Better-Write.md" target="_blank" rel="noopener">
+      <img src="/ElasticSearch/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+      </footer>
+      
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#写入性能优化">写入性能优化</a>
+      <ul>
+        <li><a href="#整体思路">整体思路</a></li>
+        <li><a href="#时效性">时效性</a>
+          <ul>
+            <li><a href="#refresh_interval">refresh_interval</a></li>
+            <li><a href="#translog-flush">translog flush</a></li>
+          </ul>
+        </li>
+        <li><a href="#段合并">段合并</a></li>
+        <li><a href="#索引">索引</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
